@@ -1,0 +1,22 @@
+import Vue from 'vue'
+import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal } from 'ant-design-vue'
+
+Vue.component(LocaleProvider.name, LocaleProvider)
+Vue.component(Pagination.name, Pagination)
+Vue.component(Button.name, Button)
+Vue.component(Layout.name, Layout)
+Vue.component(Layout.Header.name, Layout.Header)
+Vue.component(Layout.Sider.name, Layout.Sider)
+Vue.component(Layout.Content.name, Layout.Content)
+Vue.component(Layout.Footer.name, Layout.Footer)
+Vue.component(Menu.name, Menu)
+Vue.component(Menu.Item.name, Menu.Item)
+Vue.component(Menu.SubMenu.name, Menu.SubMenu)
+Vue.component(Dropdown.name, Dropdown)
+Vue.component(Icon.name, Icon)
+Vue.component(Tabs.name, Tabs)
+Vue.component(Tabs.TabPane.name, Tabs.TabPane)
+Vue.component(List.name, List)
+Vue.component(List.Item.name, List.Item)
+Vue.component(Card.name, Card)
+Vue.component(Modal.name, Modal)
