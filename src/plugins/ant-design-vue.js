@@ -1,5 +1,8 @@
 import Vue from 'vue'
-import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal } from 'ant-design-vue'
+import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker } from 'ant-design-vue'
+import { Col, Row } from 'ant-design-vue/lib/grid'
+import BreadcrumbItem from 'ant-design-vue/lib/breadcrumb/BreadcrumbItem'
+import BreadcrumbSeparator from 'ant-design-vue/lib/breadcrumb/BreadcrumbSeparator'
 
 Vue.component(LocaleProvider.name, LocaleProvider)
 Vue.component(Pagination.name, Pagination)
@@ -16,7 +19,25 @@ Vue.component(Dropdown.name, Dropdown)
 Vue.component(Icon.name, Icon)
 Vue.component(Tabs.name, Tabs)
 Vue.component(Tabs.TabPane.name, Tabs.TabPane)
-Vue.component(List.name, List)
-Vue.component(List.Item.name, List.Item)
 Vue.component(Card.name, Card)
 Vue.component(Modal.name, Modal)
+Vue.component(Checkbox.name, Checkbox)
+Vue.component(Input.name, Input)
+Vue.use(FormModel)
+Vue.prototype.$message = message
+Vue.component(Avatar.name, Avatar)
+Vue.component(Row.name, Row)
+Vue.component(Col.name, Col)
+Vue.component(Divider.name, Divider)
+Vue.component(List.name, List)
+Vue.component(List.Item.name, List.Item)
+Vue.component(List.Item.Meta.name, List.Item.Meta)
+Vue.component(PageHeader.name, PageHeader)
+Vue.component(Breadcrumb.name, Breadcrumb)
+Vue.component(Breadcrumb.Item.name, BreadcrumbItem)
+Vue.component(Breadcrumb.Separator.name, BreadcrumbSeparator)
+Vue.component(Upload.name, Upload)
+Vue.component(Statistic.name, Statistic)
+Vue.component(Table.name, Table)
+Vue.component(Input.TextArea.name, Input.TextArea)
+Vue.component(DatePicker.name, DatePicker)

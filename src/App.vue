@@ -13,28 +13,49 @@
               <router-link to="/">Store</router-link>
             </a-menu-item>
             <a-menu-item key="2">
-              <router-link to="/community">Community</router-link>
-            </a-menu-item>
-            <a-menu-item key="3">
               <router-link to="/support">Support</router-link>
             </a-menu-item>
             <a-button type="dashed" ghost>
               Install GC
             </a-button>
-            <a-dropdown placement="bottomCenter">
+            <a-dropdown placement="bottomCenter" v-if="loginFlag">
+              <a class="login-dropdown" @click="e => e.preventDefault()">
+                UserSpace
+              </a>
+              <template v-slot:overlay>
+                <a-menu @click="handleLogin">
+                  <a-menu-item key="1">
+                    <router-link to="/user">My space</router-link>
+                  </a-menu-item>
+                  <a-menu-item key="2" @click="handleLogout">
+                    <router-link to="/store">Log out</router-link>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+            <a-dropdown placement="bottomCenter" v-else>
               <a class="login-dropdown" @click="e => e.preventDefault()">
                 Login
               </a>
               <template v-slot:overlay>
-                <a-menu>
+                <a-menu @click="handleLogin">
                   <a-menu-item key="1">
-                    <router-link to="/login">Sign in as Player</router-link>
+                    <router-link :to="'/login?role='+'player'">Sign in as Player</router-link>
                   </a-menu-item>
                   <a-menu-item key="2">
-                    <router-link to="/login">Sign in as Developer</router-link>
+                    <router-link :to="'/login?role='+'developer'">Sign in as Developer</router-link>
                   </a-menu-item>
                   <a-menu-item key="3">
-                    <router-link to="/login">Sign in as Admin</router-link>
+                    <router-link :to="'/login?role='+'admin'">Sign in as Admin</router-link>
+                  </a-menu-item>
+                  <a-menu-item key="4">
+                    <router-link to="/register">Register here</router-link>
+                  </a-menu-item>
+                  <a-menu-item key="5">
+                    <router-link to="/user">Test Userspace</router-link>
+                  </a-menu-item>
+                  <a-menu-item key="6">
+                    <router-link to="/developer">Test Developer</router-link>
                   </a-menu-item>
                 </a-menu>
               </template>
@@ -42,7 +63,7 @@
           </a-menu>
         </a-layout-header>
         <a-layout-content style="background: black">
-          <router-view/>
+          <router-view @getLoginFlag="getLoginFlag"/>
         </a-layout-content>
         <a-layout-footer style="background: black;color: deepskyblue;text-align: center">
           We design ©2020 Created by Us
@@ -57,31 +78,32 @@ export default {
   name: 'app',
   data () {
     return {
-      selectedKeys_head: ['1']
+      selectedKeys_head: ['1'],
+      loginFlag: false
     }
   },
-  components: {
-  },
   methods: {
-    // gotoStore () {
-    //   this.$router.push('/')
-    // },
-    // gotoSupport () {
-    //   this.$router.push('/support')
-    // },
-    // gotoCommunity () {
-    //   this.$router.push('/community')
-    // }
+    handleLogin () {
+      this.selectedKeys_head = []
+    },
+    getLoginFlag (val) {
+      this.loginFlag = val
+    },
+    handleLogout () {
+      window.sessionStorage.clear()
+      this.loginFlag = false
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .home-container {
   text-align: left;
   background: black;
   color: #fff;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 .logo {
   height: 32px;

@@ -89,7 +89,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card-container > .ant-tabs-card > .ant-tabs-content {
   height: 120px;
   margin-top: -16px;
