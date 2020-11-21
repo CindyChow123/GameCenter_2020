@@ -8,10 +8,13 @@ import './static/reset.less'
 Vue.config.productionTip = false
 // axios.defaults.baseURL = 'https://mockapi.eolinker.com/MDE9rmu543f89a39adabfa4d62a909ce834ecfba6a59633'
 Vue.prototype.$http = axios
-// axios.interceptors.request.use(config => {
-//   // add Authorization to header
-//   config.headers.Authorization = window.sessionStorage.getItem('token')
-// })
+axios.interceptors.request.use(config => {
+  // add Authorization to header
+  if (window.sessionStorage.getItem('token')) {
+    config.headers.Authorization = window.sessionStorage.getItem('token')
+  }
+  return config
+})
 
 new Vue({
   router,

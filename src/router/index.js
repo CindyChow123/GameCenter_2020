@@ -73,6 +73,11 @@ const routes = [
         path: '/user_edit_account',
         name: 'UserEditAccount',
         component: () => import('../views/User_edit_account.vue')
+      },
+      {
+        path: '/user_edit_safety',
+        name: 'UserEditSafety',
+        component: () => import('../views/User_edit_safety.vue')
       }
     ]
   },

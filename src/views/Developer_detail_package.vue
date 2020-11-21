@@ -3,7 +3,6 @@
     <a-form-model
       id="g-form"
       ref="ruleForm"
-      :model="form"
       :rules="rules"
       class="modify"
       layout="vertical"
@@ -32,13 +31,7 @@
 export default {
   data () {
     return {
-      form: {
-        name: '',
-        description: '',
-        price: null,
-        announce: null,
-        release: null
-      },
+      id: '',
       rules: {
       },
       FileList: [
@@ -51,6 +44,9 @@ export default {
       ]
     }
   },
+  created () {
+    this.getFormInfo()
+  },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate(valid => {
@@ -61,6 +57,13 @@ export default {
           return false
         }
       })
+    },
+    async getFormInfo () {
+      this.id = this.$route.query.id
+      if (this.id !== '-1') {
+        const { data: res } = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/game/info', this.id)
+        console.log(res)
+      }
     }
   }
 }

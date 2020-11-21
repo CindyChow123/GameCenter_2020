@@ -25,7 +25,9 @@
               <template v-slot:overlay>
                 <a-menu @click="handleLogin">
                   <a-menu-item key="1">
-                    <router-link to="/user">My space</router-link>
+                    <router-link :to="{path:'/user'}" v-if="loginFlagPlayer">My space</router-link>
+                    <router-link :to="{path:'/developer'}" v-if="loginFlagDeveloper">My space</router-link>
+                    <router-link :to="{path:'/user'}" v-if="loginFlagAdmin">My space</router-link>
                   </a-menu-item>
                   <a-menu-item key="2" @click="handleLogout">
                     <router-link to="/store">Log out</router-link>
@@ -63,7 +65,7 @@
           </a-menu>
         </a-layout-header>
         <a-layout-content style="background: black">
-          <router-view @getLoginFlag="getLoginFlag"/>
+          <router-view @getLoginFlag="getLoginFlag" @getUserId="getUserId" :user_id="user_id"/>
         </a-layout-content>
         <a-layout-footer style="background: black;color: deepskyblue;text-align: center">
           We design ©2020 Created by Us
@@ -79,7 +81,11 @@ export default {
   data () {
     return {
       selectedKeys_head: ['1'],
-      loginFlag: false
+      loginFlag: false,
+      loginFlagPlayer: false,
+      loginFlagDeveloper: false,
+      loginFlagAdmin: false,
+      user_id: null
     }
   },
   methods: {
@@ -87,10 +93,26 @@ export default {
       this.selectedKeys_head = []
     },
     getLoginFlag (val) {
-      this.loginFlag = val
+      if (val === 'player') {
+        this.loginFlagPlayer = true
+        this.loginFlag = true
+      } else if (val === 'developer') {
+        this.loginFlagDeveloper = true
+        this.loginFlag = true
+      } else if (val === 'developer') {
+        this.loginFlagAdmin = true
+        this.loginFlag = true
+      }
+    },
+    getUserId (val) {
+      this.user_id = val
+      console.log(this.user_id)
     },
     handleLogout () {
       window.sessionStorage.clear()
+      this.loginFlagPlayer = false
+      this.loginFlagDeveloper = false
+      this.loginFlagAdmin = false
       this.loginFlag = false
     }
   }

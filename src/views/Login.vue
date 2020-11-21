@@ -81,11 +81,13 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (valid) {
           this.submitting = true
-          const result = await this.$http.post('http://mockjs.docway.net/mock/1W3UtmKinq5/api/session', this.form, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/user/login', this.form, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          console.log(result)
           if (result.status !== 200) return this.$message.error('Fail to login!')
           this.$message.success('Login Successfully!')
-          // save the token, pass it onto the parent
-          this.$emit('getLoginFlag', true)
+          // save the token, pass login flag to the parent
+          this.$emit('getLoginFlag', this.$route.query.role)
+          this.$emit('getUserId', result.data.data.user_id)
           window.sessionStorage.setItem('token', result.data.data.token)
           await this.$router.push('/Store')
         } else {

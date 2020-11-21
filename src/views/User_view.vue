@@ -3,26 +3,33 @@
   <div class="page">
     <a-row class="page_header">
       <a-col :span="20" style="padding-right: 30px;">
-        <a-avatar shape="square" :size="64" icon="user" style="margin-bottom: 15px;background: dodgerblue;position: absolute" />
-        <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">Username</h1>
-        <span>Email: xxxx@mail.sustech.edu.cn</span>
+        <a-avatar shape="square" :size="64" :src="this.path" style="margin-bottom: 15px;position: absolute" />
+        <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">{{ this.name }}</h1>
+        <span>Email: {{this.email}}</span>
       </a-col>
       <a-col :span="4">
         <h1 style="color: white;">Level 0</h1>
+        <a-button ghost type="dashed"  @click="$router.push('/user_edit')">
+          Invite to play
+        </a-button>
       </a-col>
     </a-row>
     <a-row>
       <a-col :span="16" class="page_content_left">
         <h1 style="color: white;margin-bottom: 0">Recently played</h1>
         <br />
-        <a-list item-layout="horizontal" :data-source="data">
+        <a-list item-layout="horizontal" :data-source="recent_games">
           <a-list-item slot="renderItem" slot-scope="item">
             <a-list-item-meta
             >
-              <a slot="title" href="https://www.antdv.com/" style="color: white">{{ item.title }}</a>
+              <a slot="title" style="color: white">
+                <router-link :to="'/user_view?id='+item.id">{{ item.name }}</router-link>
+              </a>
               <a-avatar
+                shape="square"
                 slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                :size="64"
+                :src="item.front_image"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -30,15 +37,15 @@
       </a-col>
       <a-col :span="8" class="page_content_right">
         <h1 style="color: white;margin-bottom: 0; margin-top: 20px">Friends</h1>
-        <a-list item-layout="horizontal" :data-source="data" id="user-friend">
+        <a-list item-layout="horizontal" :data-source="friends" >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-list-item-meta
-              description="Ant Design"
-            >
-              <a slot="title" href="https://www.antdv.com/" style="color: white">{{ item.title }}</a>
+            <a-list-item-meta>
+              <a slot="title" style="color: white">
+                <router-link :to="'/user_view?id='+item.id">{{ item.name }}</router-link>
+              </a>
               <a-avatar
                 slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                :src="item.path"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -50,22 +57,43 @@
 <script>
 const data = [
   {
-    title: 'Ant Design Title 1'
-  },
-  {
-    title: 'Ant Design Title 2'
-  },
-  {
-    title: 'Ant Design Title 3'
-  },
-  {
-    title: 'Ant Design Title 4'
+    title: '123'
   }
 ]
 export default {
   data () {
     return {
-      data
+      data,
+      id: null,
+      friends: [],
+      recent_games: [],
+      name: '',
+      email: '',
+      path: ''
+    }
+  },
+  created () {
+    this.getUserInfo()
+  },
+  methods: {
+    async getUserInfo () {
+      this.id = this.$route.query.id
+      const result = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user', { params: { user_id: this.$route.query.id } })
+      this.friends = result.data.data.friend_list
+      const glist = result.data.data.recent_game_list
+      console.log(glist)
+      for (var g in glist) {
+        console.log(g)
+        const ginfo = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/game/info', { params: { id: g } })
+        this.recent_games.push(ginfo.data.data.game)
+      }
+      console.log(this.recent_games)
+      this.name = result.data.data.name
+      this.email = result.data.data.email
+      this.path = result.data.data.path
+      // console.log(result)
+    },
+    async getGameInfo (glist) {
     }
   }
 }

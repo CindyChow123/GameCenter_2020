@@ -9,13 +9,13 @@
       layout="vertical"
       style="margin-left: 40px"
     >
-      <a-form-model-item ref="avatar" label="Avatar" prop="avatar">
+      <a-form-model-item ref="avatar" label="Present Avatar (Click to edit)" prop="avatar">
         <a-upload
           name="avatar"
           list-type="picture-card"
           class="avatar-uploader"
           :show-upload-list="false"
-          action="http://mockjs.docway.net/mock/1a98zbpmUHR/game/upload"
+          action="http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/upload/avatar"
           :before-upload="beforeUpload"
           @change="handleChange"
         >
@@ -31,7 +31,7 @@
       <a-form-model-item ref="profileName" label="Profile name: name shown to the public" prop="profileName">
         <a-input
           class="modify-input"
-          v-model="form.profileName"
+          v-model="form.name"
           @blur="
           () => {
             $refs.profileName.onFieldBlur();
@@ -39,17 +39,17 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="realName" label="Real name:" prop="realName">
-        <a-input
-          class="modify-input"
-          v-model="form.realName"
-          @blur="
-          () => {
-            $refs.realName.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
+<!--      <a-form-model-item ref="realName" label="Real name:" prop="realName">-->
+<!--        <a-input-->
+<!--          class="modify-input"-->
+<!--          v-model="form.realName"-->
+<!--          @blur="-->
+<!--          () => {-->
+<!--            $refs.realName.onFieldBlur();-->
+<!--          }-->
+<!--        "-->
+<!--        />-->
+<!--      </a-form-model-item>-->
       <a-form-model-item ref="bio" label="Description: " prop="bio">
         <a-textarea
           v-model="form.bio"
@@ -59,28 +59,6 @@
           @blur="
           () => {
             $refs.bio.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="password" label="Password:" prop="password">
-        <a-input
-          class="modify-input"
-          v-model="form.password"
-          @blur="
-          () => {
-            $refs.password.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="email" label="Email address: " prop="email">
-        <a-input
-          class="modify-input"
-          v-model="form.email"
-          @blur="
-          () => {
-            $refs.email.onFieldBlur();
           }
         "
         />
@@ -104,11 +82,8 @@ export default {
     return {
       other: '',
       form: {
-        profileName: '',
-        realName: '',
-        password: '',
-        bio: '',
-        email: ''
+        name: '',
+        bio: ''
       },
       loading: false,
       imageUrl: '',

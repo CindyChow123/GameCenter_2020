@@ -14,13 +14,13 @@
           style="height: 100%"
         >
           <a-menu-item key="1">
-            <router-link to="/developer_detail_package">
+            <router-link :to="{path: '/developer_detail_package', query: {id:this.id,user_id:this.user_id}}">
               <a-icon type="smile" style="display:inline" />
               <span>Upload Game package</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="2">
-            <router-link :to="{path: '/developer_detail_store', query: {id:$route.query.id}}">
+            <router-link :to="{path: '/developer_detail_store', query: {id:this.id,user_id:this.user_id}}">
               <a-icon type="menu" style="display: inline"/><span>Edit Store Page</span>
             </router-link>
           </a-menu-item>
@@ -36,6 +36,17 @@
 export default {
   data () {
     return {
+      id: null,
+      user_id: null
+    }
+  },
+  created () {
+    this.getId()
+  },
+  methods: {
+    getId () {
+      this.id = this.$route.query.id
+      this.user_id = this.$route.query.user_id
     }
   }
 }

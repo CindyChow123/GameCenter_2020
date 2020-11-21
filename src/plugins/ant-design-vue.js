@@ -1,8 +1,10 @@
 import Vue from 'vue'
-import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker } from 'ant-design-vue'
+import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker, InputNumber, Collapse, Tag, Tooltip } from 'ant-design-vue'
 import { Col, Row } from 'ant-design-vue/lib/grid'
 import BreadcrumbItem from 'ant-design-vue/lib/breadcrumb/BreadcrumbItem'
 import BreadcrumbSeparator from 'ant-design-vue/lib/breadcrumb/BreadcrumbSeparator'
+import CollapsePanel from 'ant-design-vue/lib/collapse/CollapsePanel'
+// import ToolTip from 'ant-design-vue/lib/tooltip/Tooltip'
 
 Vue.component(LocaleProvider.name, LocaleProvider)
 Vue.component(Pagination.name, Pagination)
@@ -41,3 +43,9 @@ Vue.component(Statistic.name, Statistic)
 Vue.component(Table.name, Table)
 Vue.component(Input.TextArea.name, Input.TextArea)
 Vue.component(DatePicker.name, DatePicker)
+Vue.component(InputNumber.name, InputNumber)
+Vue.component(Input.Password.name, Input.Password)
+Vue.component(Collapse.name, Collapse)
+Vue.component(Collapse.Panel.name, CollapsePanel)
+Vue.component(Tooltip.name, Tooltip)
+Vue.component(Tag.name, Tag)

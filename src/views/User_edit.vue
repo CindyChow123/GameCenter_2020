@@ -23,6 +23,11 @@
               <a-icon type="menu" style="display: inline"/><span>Account</span>
             </router-link>
           </a-menu-item>
+          <a-menu-item key="3">
+            <router-link to="/user_edit_safety">
+              <a-icon type="menu" style="display: inline"/><span>Safety</span>
+            </router-link>
+          </a-menu-item>
         </a-menu>
       </a-col>
       <a-col :span="20">

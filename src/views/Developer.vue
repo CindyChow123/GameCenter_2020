@@ -11,7 +11,7 @@
     <a-row id="develop-home-app">
       <a-col :span="18" id="develop-home-app-left">
         <h1 style="color: aliceblue">My games</h1>
-        <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail_store', query: {id: '-1'}})" style="display: inline;margin-bottom: 10px">
+        <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail', query: {id: '-1',user_id: user_id}})" style="display: inline;margin-bottom: 10px">
           Create a new game
         </a-button>
         <a-table
@@ -22,7 +22,7 @@
           rowKey="id"
         >
             <span slot="operation" slot-scope="text, record">
-            <router-link :to="'/developer_detail?id='+record.id">View Detail</router-link>
+            <router-link :to="{path: '/developer_detail', query:{ id:record.id, user_id: user_id}}">View Detail</router-link>
           </span>
         </a-table>
       </a-col>
@@ -94,6 +94,7 @@ const data = [
   }
 ]
 export default {
+  props: ['user_id'],
   data () {
     return {
       columns,

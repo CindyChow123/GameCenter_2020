@@ -2,9 +2,9 @@
   <div class="page">
     <a-row class="page_header">
       <a-col :span="20" style="padding-right: 30px;">
-        <a-avatar shape="square" :size="64" icon="user" style="margin-bottom: 15px;background: dodgerblue;position: absolute" />
-        <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">Username</h1>
-        <span>Email: xxxx@mail.sustech.edu.cn</span>
+        <a-avatar shape="square" :size="64" :src="this.path" style="margin-bottom: 15px;position: absolute" />
+        <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">{{ this.name }}</h1>
+        <span>Email: {{this.email}}</span>
       </a-col>
       <a-col :span="4">
         <h1 style="color: white;">Level 0</h1>
@@ -17,14 +17,16 @@
       <a-col :span="16" class="page_content_left">
         <h1 style="color: greenyellow;margin-bottom: 0">Messages</h1>
         <br />
-        <a-list item-layout="horizontal" :data-source="data">
+        <a-list item-layout="horizontal" :data-source="msg">
           <a-list-item slot="renderItem" slot-scope="item">
             <a-list-item-meta
+              :description="item.msg_content"
             >
               <a slot="title" href="https://www.antdv.com/" style="color: white">{{ item.title }}</a>
               <a-avatar
                 slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                icon="message"
+                style="background: steelblue"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -40,22 +42,20 @@
         <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push('/user_collections')">
           My collections
         </a-button>
-        <br />
-        <a-button type="primary" @click="$router.push('/user_wishlist')">
-          My wishlist
-        </a-button>
+<!--        <br />-->
+<!--        <a-button type="primary" @click="$router.push('/user_wishlist')">-->
+<!--          My wishlist-->
+<!--        </a-button>-->
         <h1 style="color: white;margin-bottom: 0; margin-top: 20px">Friends</h1>
-        <a-list item-layout="horizontal" :data-source="data" id="user-friend">
+        <a-list item-layout="horizontal" :data-source="friends" >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-list-item-meta
-              description="Ant Design"
-            >
-              <a slot="title" href="https://www.antdv.com/" style="color: white">
-                <router-link :to="'/user_view?id='+item.id">{{ item.title }}</router-link>
+            <a-list-item-meta>
+              <a slot="title" style="color: white">
+                <router-link :to="'/user_view?id='+item.id">{{ item.name }}</router-link>
               </a>
               <a-avatar
                 slot="avatar"
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                :src="item.path"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -65,24 +65,28 @@
   </div>
 </template>
 <script>
-const data = [
-  {
-    title: 'Ant Design Title 1'
-  },
-  {
-    title: 'Ant Design Title 2'
-  },
-  {
-    title: 'Ant Design Title 3'
-  },
-  {
-    title: 'Ant Design Title 4'
-  }
-]
 export default {
   data () {
     return {
-      data
+      friends: [],
+      msg: [],
+      name: '',
+      email: '',
+      path: ''
+    }
+  },
+  created () {
+    this.getUserInfo()
+  },
+  methods: {
+    async getUserInfo () {
+      const result = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/info')
+      this.friends = result.data.data.friend_list
+      this.msg = result.data.data.msg_list
+      this.name = result.data.data.name
+      this.email = result.data.data.email
+      this.path = result.data.data.path
+      console.log(result)
     }
   }
 }
