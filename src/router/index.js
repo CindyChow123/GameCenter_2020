@@ -46,7 +46,20 @@ const routes = [
   {
     path: '/user_collections',
     name: 'UserCollections',
-    component: () => import('../views/User_collections.vue')
+    component: () => import('../views/User_collections.vue'),
+    redirect: '/user_collections_comments',
+    children: [
+      {
+        path: '/user_collections_comments',
+        name: 'UserCollectionsComments',
+        component: () => import('../views/User_collections_comments')
+      },
+      {
+        path: '/user_collections_shots',
+        name: 'UserCollectionsShots',
+        component: () => import('../views/User_collections_shots')
+      }
+    ]
   },
   {
     path: '/user_games',
@@ -90,7 +103,7 @@ const routes = [
     path: '/developer_detail',
     name: 'DeveloperDetail',
     component: () => import('../views/Developer_detail'),
-    redirect: '/developer_detail_package',
+    redirect: '/developer_detail_store',
     children: [
       {
         path: '/developer_detail_package',

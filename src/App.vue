@@ -42,13 +42,13 @@
               <template v-slot:overlay>
                 <a-menu @click="handleLogin">
                   <a-menu-item key="1">
-                    <router-link :to="'/login?role='+'player'">Sign in as Player</router-link>
+                    <router-link :to="'/login?role='+'p'">Sign in as Player</router-link>
                   </a-menu-item>
                   <a-menu-item key="2">
-                    <router-link :to="'/login?role='+'developer'">Sign in as Developer</router-link>
+                    <router-link :to="'/login?role='+'d'">Sign in as Developer</router-link>
                   </a-menu-item>
                   <a-menu-item key="3">
-                    <router-link :to="'/login?role='+'admin'">Sign in as Admin</router-link>
+                    <router-link :to="'/login?role='+'a'">Sign in as Admin</router-link>
                   </a-menu-item>
                   <a-menu-item key="4">
                     <router-link to="/register">Register here</router-link>
@@ -90,16 +90,17 @@ export default {
   },
   methods: {
     handleLogin () {
+      // window.sessionStorage.clear()
       this.selectedKeys_head = []
     },
     getLoginFlag (val) {
-      if (val === 'player') {
+      if (val === 'p') {
         this.loginFlagPlayer = true
         this.loginFlag = true
-      } else if (val === 'developer') {
+      } else if (val === 'd') {
         this.loginFlagDeveloper = true
         this.loginFlag = true
-      } else if (val === 'developer') {
+      } else if (val === 'a') {
         this.loginFlagAdmin = true
         this.loginFlag = true
       }
@@ -109,6 +110,7 @@ export default {
       console.log(this.user_id)
     },
     handleLogout () {
+      this.$http.post('/api/user/logout')
       window.sessionStorage.clear()
       this.loginFlagPlayer = false
       this.loginFlagDeveloper = false

@@ -123,60 +123,37 @@
         />
       </a-form-model-item>
       <a-form-model-item ref="tag" label="Game Tag:" prop="tag">
-        <template v-for="(tag, index) in tags">
-          <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">
-            <a-tag :key="tag" :closable="index !== 0" @close="() => handleClose(tag)" color="#108ee9">
-              {{ `${tag.slice(0, 20)}...` }}
-            </a-tag>
-          </a-tooltip>
-          <a-tag v-else :key="tag" :closable="index !== 0" @close="() => handleClose(tag)" color="#108ee9">
-            {{ tag }}
-          </a-tag>
-        </template>
-        <a-input
-          v-if="inputVisible"
-          ref="input"
-          type="text"
-          size="small"
-          :style="{ width: '78px' }"
-          :value="inputValue"
-          @change="handleInputChange"
-          @blur="handleInputConfirm"
-          @keyup.enter="handleInputConfirm"
-        />
-        <a-tag v-else style="background: coral; borderStyle: dashed;" @click="showInput">
-          <a-icon type="plus"/>
-          New Tag
-        </a-tag>
-      </a-form-model-item>
-      <h1 style="color: rgba(238,137,61,0.95)">Graphic information</h1>
-      <a-divider style="margin: 2px 0;background: #999999"/>
-      <a-form-model-item ref="pic_header" label="The header picture:" prop="pic_header"
-                         style="border-bottom: 1px solid #2a8be454">
-        <a-upload
-          action="http://mockjs.docway.net/mock/1a98zbpmUHR/game/upload"
-          list-type="picture"
-        >
-          <a-button>
-            <a-icon type="upload"/>
-            Upload
-          </a-button>
-        </a-upload>
-      </a-form-model-item>
-      <a-form-model-item ref="video" label="The description video:" prop="video"
-                         style="border-bottom: 1px solid #2a8be454">
-        <a-upload
-          list-type="picture"
-          action="http://mockjs.docway.net/mock/1a98zbpmUHR/game/upload"
-          :default-file-list="VideoList"
-        >
-          <a-button>
-            <a-icon type="upload"/>
-            Upload
-          </a-button>
-        </a-upload>
-      </a-form-model-item>
-      <a-form-model-item>
+        <a-select placeholder="Please select a tag" v-model="tag" style="width: 120px; margin-bottom: 20px">
+          <a-select-option v-for="item in this.tags" :key="item">
+            {{ item }}
+          </a-select-option>
+        </a-select>
+<!--        <template v-for="(tag, index) in tags">-->
+<!--          <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">-->
+<!--            <a-tag :key="tag" :closable="index !== 0" @close="() => handleClose(tag)" color="#108ee9">-->
+<!--              {{ `${tag.slice(0, 20)}...` }}-->
+<!--            </a-tag>-->
+<!--          </a-tooltip>-->
+<!--          <a-tag v-else :key="tag" :closable="index !== 0" @close="() => handleClose(tag)" color="#108ee9">-->
+<!--            {{ tag }}-->
+<!--          </a-tag>-->
+<!--        </template>-->
+<!--        <a-input-->
+<!--          v-if="inputVisible"-->
+<!--          ref="input"-->
+<!--          type="text"-->
+<!--          size="small"-->
+<!--          :style="{ width: '78px' }"-->
+<!--          :value="inputValue"-->
+<!--          @change="handleInputChange"-->
+<!--          @blur="handleInputConfirm"-->
+<!--          @keyup.enter="handleInputConfirm"-->
+<!--        />-->
+<!--        <a-tag v-else style="background: coral; borderStyle: dashed;" @click="showInput">-->
+<!--          <a-icon type="plus"/>-->
+<!--          New Tag-->
+<!--        </a-tag>-->
+        <br/>
         <a-button type="primary" @click="submitForm('ruleForm')">
           Submit
         </a-button>
@@ -186,6 +163,7 @@
 </template>
 <script>
 import moment from 'moment'
+import qs from 'qs'
 
 export default {
   data () {
@@ -198,7 +176,7 @@ export default {
         announce_date: null,
         release_date: null,
         developer_id: null,
-        tags: [],
+        tag: '',
         discount_start: '',
         discount_end: '',
         discount_rate: null,
@@ -208,7 +186,7 @@ export default {
         name: [
           {
             required: true,
-            message: 'Please input Activity name',
+            message: 'Please input game name',
             trigger: 'blur'
           }
         ],
@@ -225,44 +203,50 @@ export default {
           }
         ]
       },
-      PicList: [],
-      VideoList: [
-        {
-          uid: '1',
-          name: 'xxx.png',
-          status: 'done',
-          response: 'Server Error 500' // custom error message to show
-        }
-      ],
-      tags: [],
+      tags: ['Racing', 'Sports', 'Action', 'Adventure', 'Casual'],
+      tag: 'null',
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      header: {
+        token:
+        window.sessionStorage.getItem('token')
+      }
     }
   },
   created () {
-    this.getFormInfo()
+    this.getFileInfo()
+    // this.getFormInfo()
+    // this.getFileInfo()
   },
   methods: {
+    handleChange (tag, checked) {
+    },
     submitForm () {
       this.$refs.ruleForm.validate(async valid => {
         if (valid) {
-          this.form.tags = this.tags
-          console.log(this.form)
+          this.form.tag = this.tag
+          console.log(this.form.tag)
+          const temp = qs.stringify(this.form)
           // upload form - create or update
           let result
           if (this.form.id === '-1') {
-            result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/game/create', this.form)
+            result = await this.$http.post('/game/create', temp)
+            if (result.status !== 200 || result.data.code !== 0) {
+              return this.$message.error(result.data.msg)
+            }
           } else {
-            result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/game/update', this.form)
+            result = await this.$http.post('/game/update', temp)
+            if (result.status !== 200 || result.data.code !== 0) {
+              return this.$message.error(result.data.msg)
+            }
           }
           // upload picture
           console.log(result)
-          if (result.status === 200 && result.data.code === 0) {
-            this.form = result.data.data
-            this.$message.success('Upload succeed')
-          } else {
-            this.$message.error('Error!')
-          }
+          this.form = result.data.data
+          // update the created game id
+          this.$emit('getId', result.data.data.id)
+          // console.log(this.form)
+          this.$message.success('Upload succeed')
         } else {
           this.$message.error('Invalid submission!!')
           return false
@@ -297,13 +281,19 @@ export default {
         console.log(file, fileList)
       }
     },
-    async getFormInfo () {
+    async getFileInfo () {
       this.form.id = this.$route.query.id
       this.form.developer_id = this.$route.query.user_id
+      console.log(this.form)
       if (this.form.id !== '-1') {
-        const { data: res } = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/game/create', this.form)
-        console.log(res)
-        this.form = res.data
+        const result = await this.$http.get('/game/info', { params: { id: this.form.id } })
+        if (result.status !== 200 || result.data.code !== 0) {
+          return this.$message.error(result.data.msg)
+        }
+        if (result.data.code === 0) {
+          this.form = result.data.data.game
+          console.log(this.form)
+        }
       }
     },
     handleClose (removedTag) {
@@ -317,23 +307,6 @@ export default {
       this.$nextTick(function () {
         this.$refs.input.focus()
       })
-    },
-
-    handleInputChange (e) {
-      this.inputValue = e.target.value
-      console.log(this.inputValue)
-    },
-
-    handleInputConfirm () {
-      const inputValue = this.inputValue
-      let tags = this.tags
-      if (inputValue && tags.indexOf(inputValue) === -1) {
-        tags = [...tags, inputValue]
-      }
-      console.log(tags)
-      this.tags = tags
-      this.inputValue = ''
-      this.inputVisible = false
     }
   }
 }

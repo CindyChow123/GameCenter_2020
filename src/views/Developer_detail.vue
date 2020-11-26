@@ -6,28 +6,28 @@
       <a-breadcrumb-item>Detail</a-breadcrumb-item>
     </a-breadcrumb>
     <div class="page">
-      <a-col :span="4" style="height: 100%;">
+      <a-col :span="6" style="height: 100%;">
         <a-menu
           :default-selected-keys="['1']"
           mode="inline"
           theme="dark"
           style="height: 100%"
         >
-          <a-menu-item key="1">
+          <a-menu-item key="1" >
+            <router-link :to="{path: '/developer_detail_store', query: {id:this.id,user_id:this.user_id}}">
+              <a-icon type="menu" style="display: inline"/><span>Edit Store Page</span>
+            </router-link>
+          </a-menu-item>
+          <a-menu-item key="2" :disabled="this.hide">
             <router-link :to="{path: '/developer_detail_package', query: {id:this.id,user_id:this.user_id}}">
               <a-icon type="smile" style="display:inline" />
               <span>Upload Game package</span>
             </router-link>
           </a-menu-item>
-          <a-menu-item key="2">
-            <router-link :to="{path: '/developer_detail_store', query: {id:this.id,user_id:this.user_id}}">
-              <a-icon type="menu" style="display: inline"/><span>Edit Store Page</span>
-            </router-link>
-          </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col :span="20">
-        <router-view></router-view>
+      <a-col :span="18">
+        <router-view @getId="getIdCreate"></router-view>
       </a-col>
     </div>
   </div>
@@ -37,7 +37,8 @@ export default {
   data () {
     return {
       id: null,
-      user_id: null
+      user_id: null,
+      hide: false
     }
   },
   created () {
@@ -47,6 +48,15 @@ export default {
     getId () {
       this.id = this.$route.query.id
       this.user_id = this.$route.query.user_id
+      if (this.id === '-1') {
+        this.hide = true
+      }
+    },
+    getIdCreate (val) {
+      this.id = val
+      if (this.id !== '-1') {
+        this.hide = false
+      }
     }
   }
 }

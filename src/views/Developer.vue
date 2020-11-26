@@ -2,9 +2,9 @@
   <div id="develop-home">
     <a-row id="develop-home-welcome">
       <a-col :span="24">
-        <a-avatar shape="square" :size="64" icon="user" style="margin-bottom: 15px;background: rgba(24,74,110,0.95);position: absolute;" />
-        <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px;">Welcome! Username</h1>
-        <span>Email: xxxx@mail.sustech.edu.cn</span>
+        <a-avatar shape="square" :size="64" :src="this.path+this.id" style="margin-bottom: 15px;position: absolute;" />
+        <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px;">Welcome! {{this.name}}</h1>
+        <span>Email: {{ this.email }}</span>
       </a-col>
     </a-row>
     <a-divider class="develop-home-divider" />
@@ -16,7 +16,7 @@
         </a-button>
         <a-table
           :columns="columns"
-          :data-source="data"
+          :data-source="gameList"
           id="develop-home-app-left-table"
           :pagination="false"
           rowKey="id"
@@ -46,6 +46,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 const columns = [
   {
     title: 'Game Name',
@@ -58,12 +59,13 @@ const columns = [
     width: 150
   },
   {
-    title: 'State',
-    dataIndex: 'state'
+    title: 'Branch',
+    dataIndex: 'branch',
+    width: 150
   },
   {
-    title: 'Progress',
-    dataIndex: 'progress'
+    title: 'Announce Date',
+    dataIndex: 'announce'
   },
   {
     title: 'Release Date',
@@ -75,30 +77,61 @@ const columns = [
     scopedSlots: { customRender: 'operation' }
   }
 ]
-const data = [
-  {
-    id: 1,
-    name: 'Game1',
-    type: 'Game',
-    state: 'unannounced',
-    progress: 'incomplete',
-    release: 'unreleased'
-  },
-  {
-    id: 2,
-    name: 'dlc2',
-    type: 'DLC',
-    state: 'unannounced',
-    progress: 'incomplete',
-    release: 'unreleased'
-  }
-]
 export default {
   props: ['user_id'],
   data () {
     return {
       columns,
-      data
+      name: '',
+      email: '',
+      path: 'http://10.17.91.184/api/user/avatar/',
+      id: null,
+      gameList: [],
+      glist: []
+    }
+  },
+  created () {
+    this.getUserInfo()
+  },
+  methods: {
+    async getUserInfo () {
+      const result = await this.$http.get('/api/user/info')
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
+      this.name = result.data.data.name
+      this.email = result.data.data.email
+      this.id = result.data.data.id
+      this.glist = result.data.data.games
+      // console.log(this.glist.length)
+      for (var i = 0; i < this.glist.length; i++) {
+        var g = this.glist[i].id
+        // console.log(g)
+        const ginfo = await this.$http.get('/game/info', { params: { id: g } })
+        if (result.status !== 200 || result.data.code !== 0) {
+          return this.$message.error(result.data.msg)
+        }
+        // console.log(ginfo)
+        // eslint-disable-next-line no-unused-vars
+        var r = ginfo.data.data.game.release_date
+        // eslint-disable-next-line no-unused-vars
+        var a = ginfo.data.data.game.announce_date
+        if ((moment().diff(moment(ginfo.data.data.game.announce_date, 'YYYY-MM-DD'), 'days')) === 0) {
+          a = 'announced'
+        }
+        if ((moment().diff(moment(ginfo.data.data.game.release_date, 'YYYY-MM-DD'), 'days')) === 0) {
+          r = 'announced'
+        }
+        this.gameList.push({
+          announce: a,
+          id: g,
+          name: ginfo.data.data.game.name,
+          branch: ginfo.data.data.game.branch,
+          type: 'DLC',
+          release: r
+        })
+      }
+      // console.log(this.gameList)
     }
   }
 }

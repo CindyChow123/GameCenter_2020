@@ -13,21 +13,25 @@
           style="height: 100%"
         >
           <a-menu-item key="1">
-            <a-icon type="smile" />
-            <span>All</span>
+            <router-link :to="{path: '/user_collections_comments', query: {user_id:this.$route.query.user_id}}">
+              <a-icon type="message" style="display: inline"/><span>My Comments</span>
+            </router-link>
           </a-menu-item>
           <a-menu-item key="2">
-            <a-icon type="menu" /><span>Reviews</span>
+            <router-link :to="{path: '/user_collections_shots', query: {user_id:this.$route.query.user_id, type:'p'}}">
+              <a-icon type="camera" style="display: inline"/><span>My Screenshots</span>
+            </router-link>
           </a-menu-item>
           <a-menu-item key="3">
-            <a-icon type="menu" /><span>Screenshots</span>
-          </a-menu-item>
-          <a-menu-item key="4">
-            <a-icon type="menu" /><span>User Defined</span>
+            <router-link :to="{path: '/user_collections_shots', query: {user_id:this.$route.query.user_id, type:'v'}}">
+              <a-icon type="play-square" style="display: inline"/><span>My Screenshots</span>
+            </router-link>
           </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col :span="20"></a-col>
+      <a-col :span="20">
+        <router-view></router-view>
+      </a-col>
     </div>
   </div>
 </template>

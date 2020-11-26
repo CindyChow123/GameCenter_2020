@@ -6,12 +6,12 @@ import axios from 'axios'
 import './static/reset.less'
 
 Vue.config.productionTip = false
-// axios.defaults.baseURL = 'https://mockapi.eolinker.com/MDE9rmu543f89a39adabfa4d62a909ce834ecfba6a59633'
+axios.defaults.baseURL = 'http://10.17.91.184'
 Vue.prototype.$http = axios
 axios.interceptors.request.use(config => {
   // add Authorization to header
   if (window.sessionStorage.getItem('token')) {
-    config.headers.Authorization = window.sessionStorage.getItem('token')
+    config.headers.token = window.sessionStorage.getItem('token')
   }
   return config
 })

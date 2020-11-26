@@ -2,15 +2,18 @@
   <!--  <div style="color: white">{{$route.query.id}}</div>-->
   <div class="page">
     <a-row class="page_header">
-      <a-col :span="20" style="padding-right: 30px;">
-        <a-avatar shape="square" :size="64" :src="this.path" style="margin-bottom: 15px;position: absolute" />
+      <a-col :span="18" style="padding-right: 30px;">
+        <a-avatar shape="square" :size="64" :src="'http://10.17.91.184/api/user/avatar/'+this.$route.query.id" style="margin-bottom: 15px;position: absolute" />
         <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">{{ this.name }}</h1>
         <span>Email: {{this.email}}</span>
       </a-col>
-      <a-col :span="4">
+      <a-col :span="6">
         <h1 style="color: white;">Level 0</h1>
-        <a-button ghost type="dashed"  @click="$router.push('/user_edit')">
-          Invite to play
+        <a-button ghost type="dashed"  @click="HandleFriendReq" v-if="this.unfr && this.$route.query.unfriend">
+          Add to friend list and Invite to play
+        </a-button>
+        <a-button ghost type="dashed" v-else>
+          Already friended
         </a-button>
       </a-col>
     </a-row>
@@ -55,21 +58,16 @@
   </div>
 </template>
 <script>
-const data = [
-  {
-    title: '123'
-  }
-]
+import qs from 'qs'
 export default {
   data () {
     return {
-      data,
       id: null,
       friends: [],
       recent_games: [],
       name: '',
       email: '',
-      path: ''
+      unfr: true
     }
   },
   created () {
@@ -78,22 +76,35 @@ export default {
   methods: {
     async getUserInfo () {
       this.id = this.$route.query.id
-      const result = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user', { params: { user_id: this.$route.query.id } })
-      this.friends = result.data.data.friend_list
-      const glist = result.data.data.recent_game_list
-      console.log(glist)
+      const result = await this.$http.get('/api/user', { params: { user_id: this.$route.query.id } })
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
+      this.friends = result.data.data.friends
+      const glist = result.data.data.games
+      // console.log(glist)
       for (var g in glist) {
-        console.log(g)
-        const ginfo = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/game/info', { params: { id: g } })
+        // console.log(g)
+        const ginfo = await this.$http.get('/game/info', { params: { id: g } })
+        if (result.status !== 200 || result.data.code !== 0) {
+          return this.$message.error(result.data.msg)
+        }
         this.recent_games.push(ginfo.data.data.game)
       }
-      console.log(this.recent_games)
+      // console.log(this.recent_games)
       this.name = result.data.data.name
       this.email = result.data.data.email
       this.path = result.data.data.path
       // console.log(result)
     },
-    async getGameInfo (glist) {
+    async HandleFriendReq () {
+      this.unfr = false
+      const result = await this.$http.post('/api/user/friend/request', qs.stringify({ user_name: this.name }))
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
+      return this.$message.success('Successful approval')
+      // console.log(result)
     }
   }
 }

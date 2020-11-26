@@ -1,4 +1,6 @@
 <template>
+<!--            :before-upload="beforeUpload"
+-->
   <div>
     <a-form-model
       id="g-form"
@@ -15,9 +17,9 @@
           list-type="picture-card"
           class="avatar-uploader"
           :show-upload-list="false"
-          action="http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/upload/avatar"
-          :before-upload="beforeUpload"
+          action="http://10.17.91.184/api/user/edit/avatar"
           @change="handleChange"
+          :headers="this.header"
         >
           <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
           <div v-else>
@@ -28,17 +30,17 @@
           </div>
         </a-upload>
       </a-form-model-item>
-      <a-form-model-item ref="profileName" label="Profile name: name shown to the public" prop="profileName">
-        <a-input
-          class="modify-input"
-          v-model="form.name"
-          @blur="
-          () => {
-            $refs.profileName.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
+<!--      <a-form-model-item ref="profileName" label="Profile name: name shown to the public" prop="profileName">-->
+<!--        <a-input-->
+<!--          class="modify-input"-->
+<!--          v-model="form.name"-->
+<!--          @blur="-->
+<!--          () => {-->
+<!--            $refs.profileName.onFieldBlur();-->
+<!--          }-->
+<!--        "-->
+<!--        />-->
+<!--      </a-form-model-item>-->
 <!--      <a-form-model-item ref="realName" label="Real name:" prop="realName">-->
 <!--        <a-input-->
 <!--          class="modify-input"-->
@@ -72,6 +74,7 @@
   </div>
 </template>
 <script>
+import qs from 'qs'
 function getBase64 (img, callback) {
   const reader = new FileReader()
   reader.addEventListener('load', () => callback(reader.result))
@@ -82,12 +85,15 @@ export default {
     return {
       other: '',
       form: {
-        name: '',
         bio: ''
       },
       loading: false,
       imageUrl: '',
       rules: {
+      },
+      header: {
+        token:
+          window.sessionStorage.getItem('token')
       }
     }
   },
@@ -117,9 +123,16 @@ export default {
       return isJpgOrPng && isLt2M
     },
     submitForm (formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
-          this.$message.success('Upload succeed')
+          const result = await this.$http.post('/api/user/edit/bio', qs.stringify(this.form))
+          if (result.status === 200) {
+            if (result.data.code === 0) {
+              this.$message.success('Information changed successful')
+            } else if (result.data.code === -1) {
+              this.$message.error(result.data.msg)
+            }
+          }
         } else {
           console.log('error submit!!')
           return false

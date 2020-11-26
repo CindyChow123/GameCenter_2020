@@ -46,28 +46,30 @@
   <!--  <div id="world"></div>-->
 </template>
 <script>
+import qs from 'qs'
 export default {
   name: 'Login',
   data () {
-    const checkEmail = (rule, value, callback) => {
-      var regEmail = /^([A-Za-z0-9_-])+@(mail.sustech.edu.cn|sustech.edu.cn)$/
-      if (regEmail.test(value)) {
-        callback()
-      } else {
-        callback(new Error('Invalid Email Address!'))
-      }
-    }
+    // const checkEmail = (rule, value, callback) => {
+    //   var regEmail = /^([A-Za-z0-9_-])+@(mail.sustech.edu.cn|sustech.edu.cn)$/
+    //   if (regEmail.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('Invalid Email Address!'))
+    //   }
+    // }
     return {
       // Bind the form
       form: {
         email: '',
-        password: ''
+        password: '',
+        role: ''
       },
       // Validation rules
       rules: {
         email: [
-          { required: true, message: 'Please input your email!' },
-          { validator: checkEmail, trigger: 'blur' }
+          { required: true, message: 'Please input your email!' }
+          // { validator: checkEmail, trigger: 'blur' }
         ],
         password: [
           { required: true, message: 'Please input your Password!' }
@@ -81,9 +83,14 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (valid) {
           this.submitting = true
-          const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/user/login', this.form, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          this.form.role = this.$route.query.role
+          const temp = qs.stringify(this.form)
+          const result = await this.$http.post('/api/user/login', temp, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
           console.log(result)
-          if (result.status !== 200) return this.$message.error('Fail to login!')
+          if (result.status !== 200 || result.data.code !== 0) {
+            this.submitting = false
+            return this.$message.error(result.data.msg)
+          }
           this.$message.success('Login Successfully!')
           // save the token, pass login flag to the parent
           this.$emit('getLoginFlag', this.$route.query.role)
@@ -92,7 +99,6 @@ export default {
           await this.$router.push('/Store')
         } else {
           this.$message.error('Invalid account!')
-          console.log('error submit!!')
           return false
         }
       })

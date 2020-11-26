@@ -2,9 +2,11 @@
   <div class="page">
     <a-row class="page_header">
       <a-col :span="20" style="padding-right: 30px;">
-        <a-avatar shape="square" :size="64" :src="this.path" style="margin-bottom: 15px;position: absolute" />
+        <a-avatar shape="square" :size="64" :src="this.path+this.id" style="margin-bottom: 15px;position: absolute" />
         <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">{{ this.name }}</h1>
         <span>Email: {{this.email}}</span>
+        <br />
+        <span>Bio: {{this.bio}}</span>
       </a-col>
       <a-col :span="4">
         <h1 style="color: white;">Level 0</h1>
@@ -20,26 +22,29 @@
         <a-list item-layout="horizontal" :data-source="msg">
           <a-list-item slot="renderItem" slot-scope="item">
             <a-list-item-meta
-              :description="item.msg_content"
+              :description="item.message"
             >
-              <a slot="title" href="https://www.antdv.com/" style="color: white">{{ item.title }}</a>
+              <a slot="title" href="https://www.antdv.com/" style="color: white">{{ item.name }}</a>
               <a-avatar
                 slot="avatar"
                 icon="message"
                 style="background: steelblue"
               />
             </a-list-item-meta>
+            <a slot="actions" v-if="item.unread === false">Already Read</a>
+            <a slot="actions" v-if="item.type === 'friend request' && item.unread === true" @click="item.unread = false; handleApprove(item.source);handleRead(item.id)">Approve</a>
+            <a slot="actions" v-if="item.type !== 'friend request' && item.unread === true" @click="item.unread = false; handleRead(item.id)">Mark as Read</a>
           </a-list-item>
         </a-list>
       </a-col>
       <a-col :span="8" class="page_content_right">
         <h1 style="color: white">Others</h1>
         <br />
-        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push('/user_games')">
+        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push({path: '/user_games', query: {user_id: user_id}})">
           My Games
         </a-button>
         <br />
-        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push('/user_collections')">
+        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push({path: '/user_collections', query: {user_id: user_id}})">
           My collections
         </a-button>
 <!--        <br />-->
@@ -51,11 +56,11 @@
           <a-list-item slot="renderItem" slot-scope="item">
             <a-list-item-meta>
               <a slot="title" style="color: white">
-                <router-link :to="'/user_view?id='+item.id">{{ item.name }}</router-link>
+                <router-link :to="{path: '/user_view', query:{ id:item.id, unfriend: false}}">{{ item.name }}</router-link>
               </a>
               <a-avatar
                 slot="avatar"
-                :src="item.path"
+                :src="'http://10.20.192.29:8080/api/user/avatar/'+item.id"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -65,14 +70,18 @@
   </div>
 </template>
 <script>
+import qs from 'qs'
 export default {
+  props: ['user_id'],
   data () {
     return {
+      id: null,
       friends: [],
       msg: [],
       name: '',
       email: '',
-      path: ''
+      path: 'http://10.17.91.184/api/user/avatar/',
+      bio: ''
     }
   },
   created () {
@@ -80,13 +89,33 @@ export default {
   },
   methods: {
     async getUserInfo () {
-      const result = await this.$http.get('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/info')
-      this.friends = result.data.data.friend_list
-      this.msg = result.data.data.msg_list
+      // console.log(this.user_id)
+      const result = await this.$http.get('/api/user/info')
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
+      this.friends = result.data.data.friends
+      this.id = result.data.data.id
+      this.msg = result.data.data.messages
+      console.log(this.msg)
       this.name = result.data.data.name
       this.email = result.data.data.email
-      this.path = result.data.data.path
-      console.log(result)
+      this.bio = result.data.data.bio
+      // this.path = result.data.data.path
+      // console.log(result)
+    },
+    async handleApprove (iid) {
+      const result = await this.$http.post('/api/user/friend/confirm', qs.stringify({ from: iid }))
+      // console.log(re)
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
+    },
+    async handleRead (iid) {
+      const result = await this.$http.post('/api/user/message/read', qs.stringify({ id: iid }))
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
     }
   }
 }

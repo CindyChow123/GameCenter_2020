@@ -31,8 +31,16 @@ export default {
       this.visible = true
     },
     async handleOk () {
-      const { data: res } = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/account/topup', this.amount)
-      this.amount = res.data.amount
+      console.log(this.amount)
+      const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/account/topup', this.amount)
+      if (result.status === 200) {
+        if (result.data.code === 0) {
+          this.$message.success('Top up successfully')
+        } else if (result.data.code === -1) {
+          this.$message.error(result.data.msg)
+        }
+      }
+      this.amount = result.data.data.amount
       this.visible = false
     }
   }

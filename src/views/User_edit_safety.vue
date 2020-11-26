@@ -110,6 +110,7 @@
   </div>
 </template>
 <script>
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -144,14 +145,14 @@ export default {
     }
   },
   methods: {
-    checkEmail (rule, value, callback) {
-      var regEmail = /^([A-Za-z0-9_-])+@(mail.sustech.edu.cn|sustech.edu.cn)$/
-      if (regEmail.test(value)) {
-        callback()
-      } else {
-        callback(new Error('Invalid Email Address!'))
-      }
-    },
+    // checkEmail (rule, value, callback) {
+    //   var regEmail = /^([A-Za-z0-9_-])+@(mail.sustech.edu.cn|sustech.edu.cn)$/
+    //   if (regEmail.test(value)) {
+    //     callback()
+    //   } else {
+    //     callback(new Error('Invalid Email Address!'))
+    //   }
+    // },
     checkRepeat (rule, value, callback) {
       // console.log(value)
       if (value === '') {
@@ -165,12 +166,12 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/edit/password', this.form)
+          const result = await this.$http.post('/api/user/edit/password', qs.stringify(this.form))
           if (result.status === 200) {
             if (result.data.code === 0) {
               this.$message.success('Password changed successful')
             } else if (result.data.code === -1) {
-              this.$message.error('Error in changing password')
+              this.$message.error(result.data.msg)
             }
           }
         } else {
@@ -182,16 +183,16 @@ export default {
     submitEmailForm (formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/edit/email/confirm', this.emailForm)
+          const result = await this.$http.post('/api/user/edit/email/confirm', qs.stringify(this.emailForm))
           if (result.status === 200) {
             if (result.data.code === 0) {
               this.$message.success('Email address changed successfully')
             } else if (result.data.code === -1) {
-              this.$message.error('Error in changing email address')
+              this.$message.error(result.data.msg)
             }
           }
         } else {
-          this.$message.error('Error submitting, try again')
+          this.$message.error('Error in context')
           return false
         }
       })
@@ -199,17 +200,17 @@ export default {
     sendConCode (formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/edit/email', this.emailForm.email)
+          const result = await this.$http.post('/api/user/edit/email', qs.stringify({ email: this.emailForm.email }))
           console.log(result)
           if (result.status === 200) {
             if (result.data.code === 0) {
               this.$message.success('Confirm code sent successfully')
             } else if (result.data.code === -1) {
-              this.$message.error('Error, please try again!')
+              this.$message.error(result.data.msg)
             }
           }
         } else {
-          this.$message.error('Error submitting, try again')
+          this.$message.error('Error submitting, try again please')
           return false
         }
       })

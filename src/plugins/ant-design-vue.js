@@ -1,9 +1,10 @@
 import Vue from 'vue'
-import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker, InputNumber, Collapse, Tag, Tooltip } from 'ant-design-vue'
+import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker, InputNumber, Collapse, Tag, Tooltip, Select, Comment, Popconfirm } from 'ant-design-vue'
 import { Col, Row } from 'ant-design-vue/lib/grid'
 import BreadcrumbItem from 'ant-design-vue/lib/breadcrumb/BreadcrumbItem'
 import BreadcrumbSeparator from 'ant-design-vue/lib/breadcrumb/BreadcrumbSeparator'
 import CollapsePanel from 'ant-design-vue/lib/collapse/CollapsePanel'
+import Meta from 'ant-design-vue/lib/card/Meta'
 // import ToolTip from 'ant-design-vue/lib/tooltip/Tooltip'
 
 Vue.component(LocaleProvider.name, LocaleProvider)
@@ -22,6 +23,7 @@ Vue.component(Icon.name, Icon)
 Vue.component(Tabs.name, Tabs)
 Vue.component(Tabs.TabPane.name, Tabs.TabPane)
 Vue.component(Card.name, Card)
+Vue.component(Card.Meta.name, Meta)
 Vue.component(Modal.name, Modal)
 Vue.component(Checkbox.name, Checkbox)
 Vue.component(Input.name, Input)
@@ -49,3 +51,7 @@ Vue.component(Collapse.name, Collapse)
 Vue.component(Collapse.Panel.name, CollapsePanel)
 Vue.component(Tooltip.name, Tooltip)
 Vue.component(Tag.name, Tag)
+Vue.component(Select.name, Select)
+Vue.component(Select.Option.name, Select.Option)
+Vue.component(Comment.name, Comment)
+Vue.component(Popconfirm.name, Popconfirm)
