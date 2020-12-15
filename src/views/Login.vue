@@ -41,9 +41,9 @@
             Log in
           </a-button>
           Or
-          <a href="">
+          <router-link to="/register">
             register now!
-          </a>
+          </router-link>
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -140,7 +140,10 @@ export default {
             window.localStorage.setItem('#n', this.form.email)
             window.localStorage.setItem('##Cses', this.form.password)
           }
-          await this.$router.push('/Store')
+          await this.$router.push({
+            path: '/Store',
+            query: { user_info: result.data.data }
+          })
         } else {
           this.$message.error('Invalid account!')
           return false

@@ -12,7 +12,7 @@
       </a-col>
       <a-col span="15">
         <a-comment id="comment">
-          <a slot="author" style="font-size: large;color: greenyellow;" @click="$router.push({path: '/store'})">{{item.name}}</a>
+          <a slot="author" style="font-size: large;color: greenyellow;" @click="handleGame(item.game_id)">{{item.name}}</a>
           <p slot="content" style="color: aliceblue;">
             {{ item.content }}
           </p>
@@ -78,8 +78,20 @@ export default {
         cList[i].fi = it.data.data.game.front_image
         cList[i].datatime = moment().subtract(1, 'days')
       }
+      console.log('here', cList)
       this.comList = cList
       console.log(this.comList)
+    },
+    async handleGame (game) {
+      const re = await this.$http.get('/game/info', { params: { id: game } })
+      if (re.status !== 200 || re.data.code !== 0) {
+        return this.$message.error(re.data.msg)
+      }
+      // console.log(re)
+      await this.$router.push({
+        path: '/single_game',
+        query: { target_game: re.data.data.game }
+      })
     }
   }
 }

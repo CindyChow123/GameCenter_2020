@@ -28,7 +28,7 @@
                     <router-link :to="{path:'/user'}">User space</router-link>
                   </a-menu-item>
                   <a-menu-item key="12" v-if="loginFlagAdmin">
-                    <router-link :to="{path:'/user'}" >My space</router-link>
+                    <router-link :to="{path:'/admin'}" >My space</router-link>
                   </a-menu-item>
                   <a-menu-item key="13" v-if="loginFlagDeveloper">
                     <router-link :to="{path:'/developer'}">Developer space</router-link>

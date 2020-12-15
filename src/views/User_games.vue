@@ -44,7 +44,7 @@
               </a-popover>
             </a>
             <a-list-item-meta :description="item.branch">
-              <a slot="title" @click="$router.push({path: '/store'})" style="color: white">{{ item.name }}</a>
+              <a slot="title" @click="handleGame(item.id)" style="color: white">{{ item.name }}</a>
               <a-avatar
                 slot="avatar"
                 shape="square"
@@ -87,7 +87,7 @@ export default {
         return this.$message.error(result.data.msg)
       }
       var glist = result.data.data
-      // console.log(glist)
+      // console.log('original list:', glist)
       for (var i = 0; i < glist.length; i++) {
         this.gameList.push({
           id: glist[i].id,
@@ -147,6 +147,17 @@ export default {
           }
         }
       }
+    },
+    async handleGame (game) {
+      const re = await this.$http.get('/game/info', { params: { id: game } })
+      if (re.status !== 200 || re.data.code !== 0) {
+        return this.$message.error(re.data.msg)
+      }
+      // console.log(re)
+      await this.$router.push({
+        path: '/single_game',
+        query: { target_game: re.data.data.game }
+      })
     }
   }
 }
