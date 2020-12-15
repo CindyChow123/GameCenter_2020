@@ -7,38 +7,44 @@
     <div class="page">
       <a-col :span="4" style="height: 100%;">
         <a-menu
-          :default-selected-keys="['1']"
+          :default-selected-keys="['all']"
           mode="inline"
           theme="dark"
           style="height: 100%"
           v-model="tag"
           @click="handleSelect"
         >
-          <a-menu-item key="1">
+          <a-menu-item key="all">
             <a-icon type="smile" />
             <span>All</span>
           </a-menu-item>
-          <a-sub-menu key="2">
-            <span slot="title"><a-icon type="menu" /><span>Predefined</span></span>
-            <a-menu-item key="Racing">
-              Racing
-            </a-menu-item>
-            <a-menu-item key="Adventure">
-              Adventure
-            </a-menu-item>
-            <a-menu-item key="Action">
-              Action
-            </a-menu-item>
-          </a-sub-menu>
+          <a-menu-item v-for="item in menuList" :key="item">
+            <a-icon type="fire" />
+            <span>{{item}}</span>
+          </a-menu-item>
         </a-menu>
       </a-col>
       <a-col :span="20" class="game_right">
         <a-list item-layout="horizontal" :data-source="gameList">
           <a-list-item slot="renderItem" slot-scope="item">
-            <a slot="actions">Download</a>
-            <a slot="actions">More</a>
+            <a slot="actions">
+              <a-button ghost type="link" shape="circle" icon="download" @click="handleDownload(item.id)"></a-button>
+            </a>
+            <a slot="actions">
+              <a-popover v-model="item.inviteVisible" title="Invitation" trigger="click">
+                <a-select placeholder="Please select a tag" v-model="friTag" style="width: 100%; margin-bottom: 20px" slot="content">
+                  <a-select-option v-for="fri in friTags" :key="fri.name">
+                    {{ fri.name }}
+                  </a-select-option>
+                </a-select>
+                <a-button type="primary" slot="content" @click="item.inviteVisible = false;handleInvite(item.id, friTag)" style="width: 100%; margin-top: 10px">send</a-button>
+                <a-button ghost type="link" shape="circle">
+                  Invite a friend to play
+                </a-button>
+              </a-popover>
+            </a>
             <a-list-item-meta :description="item.branch">
-              <a slot="title" href="https://www.antdv.com/" style="color: white">{{ item.name }}</a>
+              <a slot="title" @click="$router.push({path: '/store'})" style="color: white">{{ item.name }}</a>
               <a-avatar
                 slot="avatar"
                 shape="square"
@@ -53,19 +59,26 @@
   </div>
 </template>
 <script>
+import qs from 'qs'
 export default {
   data () {
     return {
       tag: [],
-      gameList: []
+      gameList: [],
+      friTags: [],
+      friTag: 'Please select a friend',
+      menuList: null
     }
   },
   created () {
+    // console.log(this.$route.query.user)
     this.getGameInfo(this.tag)
+    this.getTag()
+    this.getFriend()
   },
   methods: {
     async getGameInfo (t) {
-      if (typeof t === 'object' || t === '1') {
+      if (typeof t === 'object' || t === 'all') {
         t = ''
       }
       // console.log(t)
@@ -79,14 +92,61 @@ export default {
         this.gameList.push({
           id: glist[i].id,
           name: glist[i].name,
-          fi: glist[i].front_image
+          fi: glist[i].front_image,
+          inviteVisible: false
         })
       }
-      console.log(this.gameList)
+      // console.log(this.gameList)
+    },
+    async getTag () {
+      const re = await this.$http.get('/api/user/game/tag')
+      console.log(re)
+      if (re.status !== 200 || re.data.code !== 0) {
+        return this.$message.error(re.data.msg)
+      }
+      this.menuList = re.data.data
+    },
+    async getFriend () {
+      const re = await this.$http.get('/api/user/info')
+      console.log(re)
+      if (re.status !== 200 || re.data.code !== 0) {
+        return this.$message.error(re.data.msg)
+      }
+      this.friTags = re.data.data.friends
     },
     handleSelect (val) {
       this.gameList = []
       this.getGameInfo(val.key)
+    },
+    async handleInvite (game, name) {
+      console.log(name)
+      const result = await this.$http.post('/api/user/friend/chat', qs.stringify({ type: 'invitation', message: game, to: name }))
+      // console.log(re)
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      } else {
+        return this.$message.success('Send Successfully')
+      }
+    },
+    async handleDownload (game) {
+      const result = await this.$http.get('/game/info', { params: { id: game } })
+      if (result.status !== 200 || result.data.code !== 0) {
+        return this.$message.error(result.data.msg)
+      }
+      // console.log(file)
+      var gcObject = result.data.data.game_content
+      const len = gcObject.length
+      var i
+      var re
+      for (i = 0; i < len; i++) {
+        if (gcObject[i].type === 'installation') {
+          // temp.name = gcObject[i].name
+          re = await this.$http.get('/game/download', { params: { name: gcObject[i].name, type: gcObject[i].type } })
+          if (re.status !== 200 || re.data.code !== 0) {
+            return this.$message.error(result.data.msg)
+          }
+        }
+      }
     }
   }
 }

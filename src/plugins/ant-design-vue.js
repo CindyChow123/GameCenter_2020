@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker, InputNumber, Collapse, Tag, Tooltip, Select, Comment, Popconfirm } from 'ant-design-vue'
+import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Avatar, Divider, PageHeader, Breadcrumb, Upload, Statistic, Table, DatePicker, InputNumber, Collapse, Tag, Tooltip, Select, Comment, Popconfirm, Popover, Rate } from 'ant-design-vue'
 import { Col, Row } from 'ant-design-vue/lib/grid'
 import BreadcrumbItem from 'ant-design-vue/lib/breadcrumb/BreadcrumbItem'
 import BreadcrumbSeparator from 'ant-design-vue/lib/breadcrumb/BreadcrumbSeparator'
@@ -55,3 +55,5 @@ Vue.component(Select.name, Select)
 Vue.component(Select.Option.name, Select.Option)
 Vue.component(Comment.name, Comment)
 Vue.component(Popconfirm.name, Popconfirm)
+Vue.component(Popover.name, Popover)
+Vue.component(Rate.name, Rate)

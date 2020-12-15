@@ -13,18 +13,18 @@
           style="height: 100%"
         >
           <a-menu-item key="1">
-            <router-link :to="{path: '/user_collections_comments', query: {user_id:this.$route.query.user_id}}">
+            <router-link :to="{path: '/user_collections_comments', query: {user:user_id}}">
               <a-icon type="message" style="display: inline"/><span>My Comments</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="2">
-            <router-link :to="{path: '/user_collections_shots', query: {user_id:this.$route.query.user_id, type:'p'}}">
+            <router-link :to="{path: '/user_collections_shots', query: {user:user_id, type:'picture'}}">
               <a-icon type="camera" style="display: inline"/><span>My Screenshots</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="3">
-            <router-link :to="{path: '/user_collections_shots', query: {user_id:this.$route.query.user_id, type:'v'}}">
-              <a-icon type="play-square" style="display: inline"/><span>My Screenshots</span>
+            <router-link :to="{path: '/user_collections_shots', query: {user:user_id, type:'video'}}">
+              <a-icon type="play-square" style="display: inline"/><span>My Videos</span>
             </router-link>
           </a-menu-item>
         </a-menu>
@@ -39,7 +39,11 @@
 export default {
   data () {
     return {
+      user_id: null
     }
+  },
+  created () {
+    this.user_id = this.$route.query.user
   }
 }
 </script>

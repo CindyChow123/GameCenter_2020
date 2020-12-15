@@ -5,6 +5,8 @@
         <a-avatar shape="square" :size="64" :src="this.path+this.id" style="margin-bottom: 15px;position: absolute;" />
         <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px;">Welcome! {{this.name}}</h1>
         <span>Email: {{ this.email }}</span>
+        <br />
+        <span>Account Balance: {{this.balance}}</span>
       </a-col>
     </a-row>
     <a-divider class="develop-home-divider" />
@@ -87,7 +89,8 @@ export default {
       path: 'http://10.17.91.184/api/user/avatar/',
       id: null,
       gameList: [],
-      glist: []
+      glist: [],
+      balance: null
     }
   },
   created () {
@@ -96,13 +99,19 @@ export default {
   methods: {
     async getUserInfo () {
       const result = await this.$http.get('/api/user/info')
+      const res = await this.$http.get('/api/developer/game')
+      console.log(res)
       if (result.status !== 200 || result.data.code !== 0) {
         return this.$message.error(result.data.msg)
+      }
+      if (res.status !== 200 || res.data.code !== 0) {
+        return this.$message.error(res.data.msg)
       }
       this.name = result.data.data.name
       this.email = result.data.data.email
       this.id = result.data.data.id
-      this.glist = result.data.data.games
+      this.balance = result.data.data.balance
+      this.glist = res.data.data
       // console.log(this.glist.length)
       for (var i = 0; i < this.glist.length; i++) {
         var g = this.glist[i].id
@@ -116,11 +125,13 @@ export default {
         var r = ginfo.data.data.game.release_date
         // eslint-disable-next-line no-unused-vars
         var a = ginfo.data.data.game.announce_date
-        if ((moment().diff(moment(ginfo.data.data.game.announce_date, 'YYYY-MM-DD'), 'days')) === 0) {
+        // console.log(moment().diff(moment(ginfo.data.data.game.announce_date, 'YYYY-MM-DD'), 'days'))
+        // console.log(moment(ginfo.data.data.game.announce_date, 'YYYY-MM-DD').diff(moment(), 'days'))
+        if (moment(ginfo.data.data.game.announce_date, 'YYYY-MM-DD').diff(moment(), 'days') <= 0) {
           a = 'announced'
         }
-        if ((moment().diff(moment(ginfo.data.data.game.release_date, 'YYYY-MM-DD'), 'days')) === 0) {
-          r = 'announced'
+        if (moment(ginfo.data.data.game.release_date, 'YYYY-MM-DD').diff(moment(), 'days') <= 0) {
+          r = 'released'
         }
         this.gameList.push({
           announce: a,

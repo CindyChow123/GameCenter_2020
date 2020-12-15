@@ -13,7 +13,7 @@
       <a-divider style="margin: 2px 0;background: #999999" />
       <a-form-model-item ref="package" label="The game file package:" prop="package" style="border-bottom: 1px solid #2a8be454">
         <a-upload
-          action="http://10.17.91.184:80/game/upload"
+          action="http://10.17.91.184/game/upload"
           :data="{id:this.$route.query.id,type:'installation'}"
           :headers="this.header"
           :default-file-list="this.FileList"
@@ -25,7 +25,7 @@
       <a-form-model-item ref="pic_header" label="The header picture:" prop="pic_header"
                          style="border-bottom: 1px solid #2a8be454">
         <a-upload
-          action="http://10.20.192.29:8080/game/upload"
+          action="http://10.17.91.184/game/upload"
           list-type="picture"
           :data="{id:this.$route.query.id,type:'image'}"
           :headers="this.header"

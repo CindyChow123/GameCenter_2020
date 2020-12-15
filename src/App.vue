@@ -24,10 +24,14 @@
               </a>
               <template v-slot:overlay>
                 <a-menu @click="handleLogin">
-                  <a-menu-item key="1">
-                    <router-link :to="{path:'/user'}" v-if="loginFlagPlayer">My space</router-link>
-                    <router-link :to="{path:'/developer'}" v-if="loginFlagDeveloper">My space</router-link>
-                    <router-link :to="{path:'/user'}" v-if="loginFlagAdmin">My space</router-link>
+                  <a-menu-item key="1" v-if="loginFlagPlayer">
+                    <router-link :to="{path:'/user'}">User space</router-link>
+                  </a-menu-item>
+                  <a-menu-item key="12" v-if="loginFlagAdmin">
+                    <router-link :to="{path:'/user'}" >My space</router-link>
+                  </a-menu-item>
+                  <a-menu-item key="13" v-if="loginFlagDeveloper">
+                    <router-link :to="{path:'/developer'}">Developer space</router-link>
                   </a-menu-item>
                   <a-menu-item key="2" @click="handleLogout">
                     <router-link to="/store">Log out</router-link>
@@ -88,6 +92,9 @@ export default {
       user_id: null
     }
   },
+  created () {
+    this.getLoginFlag(window.sessionStorage.getItem('r'))
+  },
   methods: {
     handleLogin () {
       // window.sessionStorage.clear()
@@ -110,7 +117,7 @@ export default {
       console.log(this.user_id)
     },
     handleLogout () {
-      this.$http.post('/api/user/logout')
+      this.$http.post('/api/user/logout', null, { headers: { token: window.sessionStorage.getItem('token') } })
       window.sessionStorage.clear()
       this.loginFlagPlayer = false
       this.loginFlagDeveloper = false

@@ -1,47 +1,52 @@
 <template>
-  <div id="login-box">
-<!--    <div style="color: black">{{$route.query.role}}</div>-->
-    <div class="logo">GameCenter</div>
-    <a-form-model
-      class="login-form"
-      ref="loginFormRef"
-      :model="form"
-      :rules="rules"
-    >
-      <a-form-model-item prop="email" ref="email">
-        <a-input
-          placeholder="Email"
-          v-model="form.email"
-        >
-          <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item prop="password" ref="password">
-        <a-input
-          type="password"
-          placeholder="Password"
-          v-model="form.password"
-        >
-          <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item>
-        <a-checkbox
-        >
-          Remember me
-        </a-checkbox>
-        <a class="login-form-forgot" href="">
-          Forgot password
-        </a>
-        <a-button type="primary" html-type="submit" @click="handleSubmit" class="login-form-button" :loading="submitting">
-          Log in
-        </a-button>
-        Or
-        <a href="">
-          register now!
-        </a>
-      </a-form-model-item>
-    </a-form-model>
+  <div id="bg">
+    <div class="stars">
+      <div v-for="(item,index) in starsCount" :key="index" class="star" ref="star">
+      </div>
+    </div>
+    <div id="login-box">
+      <!--    <div style="color: black">{{$route.query.role}}</div>-->
+      <div class="logo">GameCenter</div>
+      <a-form-model
+        class="login-form"
+        ref="loginFormRef"
+        :model="form"
+        :rules="rules"
+      >
+        <a-form-model-item prop="email" ref="email">
+          <a-input
+            placeholder="Email"
+            v-model="form.email"
+          >
+            <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item prop="password" ref="password">
+          <a-input
+            type="password"
+            placeholder="Password"
+            v-model="form.password"
+          >
+            <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item>
+          <a-checkbox @change="handleRem">
+            Remember me
+          </a-checkbox>
+          <a class="login-form-forgot" href="">
+            Forgot password
+          </a>
+          <a-button type="primary" html-type="submit" @click="handleSubmit" class="login-form-button" :loading="submitting">
+            Log in
+          </a-button>
+          Or
+          <a href="">
+            register now!
+          </a>
+        </a-form-model-item>
+      </a-form-model>
+    </div>
   </div>
   <!--  <div id="world"></div>-->
 </template>
@@ -60,6 +65,9 @@ export default {
     // }
     return {
       // Bind the form
+      starsCount: 800,
+      distance: 800,
+      remember: false,
       form: {
         email: '',
         password: '',
@@ -78,15 +86,45 @@ export default {
       submitting: false
     }
   },
+  created () {
+    this.getLocalStorage()
+  },
+  mounted () {
+    const _this = this
+    const starArr = _this.$refs.star
+    // console.log(starArr)
+    starArr.forEach(item => {
+      const speed = 0.2 + (Math.random() * 1)
+      const thisDistance = _this.distance + (Math.random() * 300)
+      item.style.transformOrigin = '0 0 ' + thisDistance + 'px'
+      item.style.transform = ' translate3d(0,0,-' + thisDistance + 'px) rotateY(' + (Math.random() * 360) + 'deg) rotateX(' + (Math.random() * -50) + 'deg) scale(' + speed + ',' + speed + ')'
+    })
+  },
   methods: {
+    getLocalStorage () {
+      if (window.localStorage.getItem('#n')) {
+        this.form.email = window.localStorage.getItem('#n')
+      }
+      if (window.localStorage.getItem('##Cses')) {
+        this.form.password = window.localStorage.getItem('##Cses')
+      }
+    },
+    handleRem () {
+      this.remember = true
+    },
     handleSubmit () {
       this.$refs.loginFormRef.validate(async valid => {
         if (valid) {
           this.submitting = true
           this.form.role = this.$route.query.role
-          const temp = qs.stringify(this.form)
-          const result = await this.$http.post('/api/user/login', temp, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-          console.log(result)
+          // console.log(this.form.password)
+          // const pass = this.$md5(this.form.password)
+          // let temp = this.form
+          // temp.password = pass
+          // temp = qs.stringify(temp)
+          // const result = await this.$http.post('/api/user/login', temp, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          // console.log(result)
+          const result = await this.$http.post('/api/user/login', qs.stringify(this.form), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
           if (result.status !== 200 || result.data.code !== 0) {
             this.submitting = false
             return this.$message.error(result.data.msg)
@@ -95,7 +133,13 @@ export default {
           // save the token, pass login flag to the parent
           this.$emit('getLoginFlag', this.$route.query.role)
           this.$emit('getUserId', result.data.data.user_id)
+          window.sessionStorage.setItem('r', this.$route.query.role)
           window.sessionStorage.setItem('token', result.data.data.token)
+          // remember me
+          if (this.remember === true) {
+            window.localStorage.setItem('#n', this.form.email)
+            window.localStorage.setItem('##Cses', this.form.password)
+          }
           await this.$router.push('/Store')
         } else {
           this.$message.error('Invalid account!')
@@ -107,6 +151,49 @@ export default {
 }
 </script>
 <style scoped>
+#bg {
+  background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f92, #75517d, #1b2947);
+  background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e96f92 65%, #f7f7b6);
+  background-attachment: fixed;
+  overflow: hidden;
+}
+@keyframes rotate {
+  0% {
+    transform: perspective(400px) rotateZ(20deg) rotateX(-40deg) rotateY(0);
+  }
+  100% {
+    transform: perspective(400px) rotateZ(20deg) rotateX(-40deg) rotateY(-360deg);
+  }
+}
+
+.stars {
+  transform: perspective(500px);
+  transform-style: preserve-3d;
+  position: absolute;
+  bottom: 0;
+  perspective-origin: 50% 100%;
+  left: 50%;
+  animation: rotate 90s infinite linear;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.star {
+  width: 2px;
+  height: 2px;
+  background: #F7F7B6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0 -300px;
+  transform: translate3d(0, 0, -300px);
+  backface-visibility: hidden;
+}
+@keyframes mymove
+{
+  from {left:0px;}
+  to {left:200px;}
+}
 .logo {
   color: black;
   margin-bottom: 40px;
@@ -122,6 +209,7 @@ export default {
   margin-left: 150px;
   border-radius:5px;
   padding-top: 0;
+  margin-bottom: 150px;
 }
 .login-form {
   padding: 0px 20px;

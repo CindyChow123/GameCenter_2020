@@ -6,12 +6,8 @@
     <a-button ghost type="dashed" style="margin-left: 40px" @click="handleTopUp">
       Add funds to your account
     </a-button>
-    <a-modal :visible="visible" title="Top up" @ok="handleOk">
-      <a-input-number
-        :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-        :parser="value => value.replace(/\$\s?|(,*)/g, '')"
-        :value="amount"
-      />
+    <a-modal :visible="visible" title="Top up" @ok="handleOk" @cancel="handleCan">
+      <a-input prefix="￥" suffix="RMB" v-model="temp"/>
     </a-modal>
     <a-button ghost type="dashed" style="margin-left: 40px">
       View purchase history
@@ -19,20 +15,33 @@
   </div>
 </template>
 <script>
+import qs from 'qs'
 export default {
   data () {
     return {
       visible: false,
-      amount: 100
+      amount: null,
+      temp: null
     }
   },
+  created () {
+    this.getAcInfo()
+  },
   methods: {
+    async getAcInfo () {
+      const re = await this.$http.get('/api/user/info')
+      if (re.status !== 200 || re.data.code !== 0) {
+        this.$message.error(re.data.msg)
+      } else {
+        this.amount = re.data.data.balance
+      }
+    },
     handleTopUp () {
       this.visible = true
     },
     async handleOk () {
-      console.log(this.amount)
-      const result = await this.$http.post('http://mockjs.docway.net/mock/1a98zbpmUHR/api/user/account/topup', this.amount)
+      console.log(this.temp)
+      const result = await this.$http.post('/api/user/edit/balance', qs.stringify({ amount: this.temp }))
       if (result.status === 200) {
         if (result.data.code === 0) {
           this.$message.success('Top up successfully')
@@ -40,7 +49,10 @@ export default {
           this.$message.error(result.data.msg)
         }
       }
-      this.amount = result.data.data.amount
+      this.amount = result.data.data
+      this.visible = false
+    },
+    handleCan () {
       this.visible = false
     }
   }

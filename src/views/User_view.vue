@@ -9,7 +9,7 @@
       </a-col>
       <a-col :span="6">
         <h1 style="color: white;">Level 0</h1>
-        <a-button ghost type="dashed"  @click="HandleFriendReq" v-if="this.unfr && this.$route.query.unfriend">
+        <a-button ghost type="dashed"  @click="HandleFriendReq" v-if="this.unfr">
           Add to friend list and Invite to play
         </a-button>
         <a-button ghost type="dashed" v-else>
@@ -75,6 +75,7 @@ export default {
   },
   methods: {
     async getUserInfo () {
+      this.unfr = this.$route.query.unfriend !== 'false'
       this.id = this.$route.query.id
       const result = await this.$http.get('/api/user', { params: { user_id: this.$route.query.id } })
       if (result.status !== 200 || result.data.code !== 0) {
