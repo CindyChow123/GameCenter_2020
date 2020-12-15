@@ -1,0 +1,317 @@
+<template>
+  <div>
+    <a-row type="flex" justify="center" align="top">
+      <a-col :span="4">
+        <a-avatar :size="100" icon="user" style="margin-top: 50px; color: dodgerblue"/>
+        <br />
+        <strong style="font-size: 25px;margin-top: 30px; margin-left: 10px">admin</strong>
+      </a-col>
+      <a-col :span="16">
+        <a-tabs default-active-key="1" @change="callback"
+            style="width: 600px; color: white">
+          <a-tab-pane key="1" tab="Create users">
+            <a-form-model ref="ruleForm" :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
+              <a-form-model-item label="Account name" placeholder="please input the account name">
+                <a-input v-model="form.name"/>
+              </a-form-model-item>
+              <a-form-model-item label="E-mail">
+                <a-input v-model="form.email"/>
+              </a-form-model-item>
+              <a-form-model-item label="Password">
+                <a-input v-model="form.password" type="password"/>
+              </a-form-model-item>
+              <a-form-model-item label="Account role">
+                <a-radio-group v-model="form.role">
+                  <a-radio value="p">
+                    Player
+                  </a-radio>
+                  <a-radio value="d">
+                    Developer
+                  </a-radio>
+                  <a-radio value="a">
+                    Admin
+                  </a-radio>
+                </a-radio-group>
+              </a-form-model-item>
+              <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button type="primary" @click="onSubmit" style="margin-left: 200px">
+                  Create
+                </a-button>
+                <a-button style="margin-left: 2px" @click="resetForm">
+                  Cancel
+                </a-button>
+              </a-form-model-item>
+            </a-form-model>
+          </a-tab-pane>
+          <a-tab-pane key="2" tab="Modify Profiles">
+            <a-input-search
+              placeholder="input user id/name/e-mail"
+              enter-button="Search"
+              size="small"
+              @search="onSearch"
+              style="width: 400px"
+            />
+            <br /><br />
+            <a-descriptions :model="profile" title="User Info">
+              <a-descriptions-item label="User ID" v-model="profile.user_id">
+                {{profile.user_id}}
+              </a-descriptions-item>
+              <a-descriptions-item label="User name" v-model="profile.name">
+                {{profile.name}}
+              </a-descriptions-item>
+              <a-descriptions-item label="User E-mail" v-model="profile.email">
+                {{profile.email}}
+              </a-descriptions-item>
+              <a-descriptions-item label="balance" v-model="profile.balance">
+                {{profile.balance}}
+              </a-descriptions-item>
+              <a-descriptions-item label="role" v-model="profile.role">
+                {{profile.role}}
+              </a-descriptions-item>
+              <a-descriptions-item label="bio" v-model="profile.bio">
+                {{profile.bio}}
+              </a-descriptions-item>
+              <a-descriptions-item label="is_online" v-model="profile.is_online">
+                {{profile.is_online}}
+              </a-descriptions-item>
+              <a-descriptions-item label="created_at" v-model="profile.created_at">
+                {{profile.created_at}}
+              </a-descriptions-item>
+              <a-descriptions-item label="is_locked" v-model="profile.is_locked" >
+                {{profile.is_locked}}
+              </a-descriptions-item>
+            </a-descriptions>
+            <a-button type="primary" style="margin-top: 10px" @click="changeStatus">
+              ChangeLockStatus
+            </a-button>
+            <a-radio-group :value="current_role" @change="handleRoleChange" style="margin-left: 10px">
+              <a-radio-button value="a">
+                Admin
+              </a-radio-button>
+              <a-radio-button value="d">
+                Developer
+              </a-radio-button>
+              <a-radio-button value="p">
+                Player
+              </a-radio-button>
+            </a-radio-group>
+          </a-tab-pane>
+          <a-tab-pane key="3" tab="Upload Documents">
+            <div>
+              <strong style="font-size: 25px; margin-top: 20px">Upload User Document</strong>
+              <br /><br />
+              <a-upload
+                name="manual"
+                :multiple="true"
+                action="http://10.21.40.23/api/admin/manual"
+                accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                :headers="headers"
+                @change="handleChange"
+                style="margin-left:20px;margin-top: 100px"
+              >
+                <a-button> <a-icon type="upload" /> Click to Upload </a-button>
+              </a-upload>
+              <br /><br />
+            </div>
+            <div>
+              <strong style="font-size: 25px; margin-top: 20px">Upload Developer Document</strong>
+              <br /><br />
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="handleChange"
+                style="margin-left:20px;margin-top: 100px"
+              >
+                <a-button> <a-icon type="upload" /> Click to Upload </a-button>
+              </a-upload>
+            </div>
+          </a-tab-pane>
+        </a-tabs>
+      </a-col>
+    </a-row>
+  </div>
+</template>
+
+<script>
+import qs from 'qs'
+
+export default {
+  name: 'Admin',
+  data () {
+    return {
+      labelCol: { span: 4 },
+      wrapperCol: { span: 14 },
+      form: {
+        name: '',
+        email: '',
+        password: '',
+        role: ''
+      },
+      profile: {
+        user_id: 'x',
+        name: '',
+        email: '',
+        avatar: '',
+        balance: '',
+        role: '',
+        bio: '',
+        is_online: '',
+        created_at: '',
+        is_locked: ''
+      },
+      current_role: '',
+      headers: {
+        authorization: 'authorization-text'
+      }
+    }
+  },
+  methods: {
+    callback (key) {
+      console.log(key)
+    },
+    onSubmit () {
+      console.log('submit!', this.form)
+      var obji = {
+        user_email: this.form.email,
+        user_name: this.form.name,
+        password: this.form.password,
+        role: this.form.role
+      }
+      obji = qs.stringify(obji)
+      this.$http.post('/api/admin/user/create', obji)
+        .then((response) => {
+          console.log(response)
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('Create successfully')
+          } else {
+            // this.$message.error('Error!')
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    onSearch (value) {
+      console.log(value)
+      // const result = this.$http.get('/api/admin/user/info', value)
+      // console.log(result)
+      // this.profile = result.data
+      // console.log(this.profile)
+      this.$http.get('/api/admin/user/info', {
+        params: {
+          admin_id: 1,
+          user_name: value
+        }
+      })
+        .then((response) => {
+          console.log(response.data.data)
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('Query successfully')
+            // this.profile = response.data.data
+            this.profile.user_id = response.data.data.id.toString()
+            this.profile.name = response.data.data.name
+            this.profile.email = response.data.data.email
+            this.profile.avatar = response.data.data.avatar
+            this.profile.balance = response.data.data.balance.toString()
+            this.profile.role = response.data.data.role
+            this.profile.bio = response.data.data.bio
+            this.profile.is_online = response.data.data.online.toString()
+            this.profile.created_at = response.data.data.createdAt.toString()
+            this.profile.is_locked = response.data.data.locked.toString()
+          } else {
+            // this.$message.error('Error!')
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    changeStatus () {
+      var obji = {
+        user_id: Number(this.profile.user_id),
+        user_email: this.profile.user_email,
+        user_name: this.profile.user_name,
+        lock: Boolean(this.profile.lock)
+      }
+      obji = qs.stringify(obji)
+      this.$http.post('/api/admin/user/account/lock', obji)
+        .then((response) => {
+          console.log(response.data)
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('Change successfully')
+            if (this.profile.is_locked === 'ture') {
+              this.profile.is_locked = 'false'
+            } else {
+              this.profile.is_locked = 'ture'
+            }
+          } else {
+            this.$message.error('Error!')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    handleRoleChange (e) {
+      this.$http.post('/api/admin/user/assign', {
+        params: {
+          admin_id: 1,
+          user_id: this.profile.user_id,
+          role: e.target.value
+        }
+      })
+        .then((response) => {
+          console.log(response)
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200) {
+            if (this.profile.role !== e.target.value) {
+              this.$message.success('Change successfully')
+              this.profile.role = e.target.value
+            }
+          } else {
+            this.$message.error('Error!')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    resetForm () {
+      console.log(this.form)
+      this.$refs.ruleForm.resetFields()
+    },
+    handleChange (info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} file uploaded successfully`)
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`)
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>
