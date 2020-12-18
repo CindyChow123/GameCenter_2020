@@ -137,14 +137,11 @@ export default {
       var gcObject = result.data.data.game_content
       const len = gcObject.length
       var i
-      var re
+      // var re
       for (i = 0; i < len; i++) {
         if (gcObject[i].type === 'installation') {
-          // temp.name = gcObject[i].name
-          re = await this.$http.get('/game/download', { params: { name: gcObject[i].name, type: gcObject[i].type } })
-          if (re.status !== 200 || re.data.code !== 0) {
-            return this.$message.error(result.data.msg)
-          }
+          window.location.href = 'http://10.17.91.184/game/download/?name=' + gcObject[i].name + '&type=installation'
+          console.log(gcObject[i])
         }
       }
     },

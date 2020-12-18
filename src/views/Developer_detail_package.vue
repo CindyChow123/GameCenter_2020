@@ -67,6 +67,7 @@ export default {
       FileList: [],
       PicList: [],
       VideoList: [],
+      DLCList: [],
       header: {
         token:
           window.sessionStorage.getItem('token')

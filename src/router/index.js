@@ -29,11 +29,6 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: () => import('../views/Register.vue')
-  },
-  {
     path: '/user',
     name: 'User',
     component: () => import('../views/User.vue')
@@ -114,6 +109,11 @@ const routes = [
         path: '/developer_detail_store',
         name: 'DeveloperDetailStore',
         component: () => import('../views/Developer_detail_store')
+      },
+      {
+        path: '/developer_detail_dlc',
+        name: 'DeveloperDetailDLC',
+        component: () => import('../views/Developer_detail_dlc')
       }
     ]
   },

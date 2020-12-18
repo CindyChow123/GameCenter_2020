@@ -55,11 +55,11 @@ const columns = [
     dataIndex: 'name',
     width: 150
   },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    width: 150
-  },
+  // {
+  //   title: 'Type',
+  //   dataIndex: 'type',
+  //   width: 150
+  // },
   {
     title: 'Branch',
     dataIndex: 'branch',
@@ -138,7 +138,7 @@ export default {
           id: g,
           name: ginfo.data.data.game.name,
           branch: ginfo.data.data.game.branch,
-          type: 'DLC',
+          // type: 'DLC',
           release: r
         })
       }

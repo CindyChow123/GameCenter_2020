@@ -24,6 +24,12 @@
               <span>Upload Game package</span>
             </router-link>
           </a-menu-item>
+          <a-menu-item key="3" :disabled="this.hide">
+            <router-link :to="{path: '/developer_detail_dlc', query: {id:this.id,user_id:this.user_id}}">
+              <a-icon type="smile" style="display:inline" />
+              <span>Create Downloadable Content</span>
+            </router-link>
+          </a-menu-item>
         </a-menu>
       </a-col>
       <a-col :span="18">
