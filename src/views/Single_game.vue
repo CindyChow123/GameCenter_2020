@@ -82,7 +82,7 @@
         <a-list-item>
           <a-comment
             :author="comment.user_name"
-            :avatar="/api/user/avatar/" + comments[i].user_id
+            :avatar="this.comment_userAvatar[index]"
             :content="comment.content"
             :datetime="comment.createAt"
             style="margin-left: 50px"
@@ -201,10 +201,10 @@ export default {
                 this.game_install = this.gameContent[i]
               } else if (this.gameContent[i].type === 'video') {
                 this.game_video = this.gameContent[i]
-                this.video_url = 'http://10.17.91.184/game/getVideo/' + this.game_video.name
+                this.video_url = 'http://47.115.50.249/game/download?name=' + this.game_video.name + '&type=video'
               } else {
                 this.game_pic[numPic] = this.gameContent[i]
-                this.pic_url[numPic] = 'http://10.17.91.184/game/getPhoto/' + this.game_pic[numPic].name
+                this.pic_url[numPic] = 'http://47.115.50.249/game/getPhoto/' + this.game_pic[numPic].name
                 numPic = numPic + 1
               }
             }
@@ -317,7 +317,7 @@ export default {
       }
     },
     downloadGame () {
-      window.location.href = 'http://10.17.91.184/game/download?type=installation&name=' + this.game_install.name
+      window.location.href = 'http://47.115.50.249/game/download?type=installation&name=' + this.game_install.name
     },
     async getScoreComment () {
       await this.$http.get('/comment/GID/' + this.game.id)
@@ -336,12 +336,12 @@ export default {
         })
       if (this.comments.length > 0) {
         for (var i = 0;i < this.comments.length;i++){
+          this.comment_userAvatar[i] = 'http://47.115.50.249/api/user/avatar/' + this.comments[i].user_id
           this.$http.get('/api/user/avatar/' + this.comments[i].user_id)
           .then((response) => {
             console.log('Query avatar back', typeof(response.data))
             if (response.status === 200 && response.data.code === 0) {
               this.$message.success('Query avatar successfully')
-              this.comment_userAvatar[i] = response.data
             } else {
               // this.$message.error('Error!')
               this.$message.error(response.data.msg)

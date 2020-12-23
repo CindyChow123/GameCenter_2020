@@ -162,7 +162,7 @@ export default {
             console.log('Length is here', this.games.length)
             for (let i = 0; i < this.games.length; i++) {
               console.log('Game[i] is here', this.games[i])
-              this.urls[i] = 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image
+              this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
             }
             console.log('array urls', this.urls)
             this.$message.success('Query successfully')
@@ -215,7 +215,7 @@ export default {
             console.log('Length is here', this.games.length)
             for (let i = 0; i < this.games.length; i++) {
               console.log('Game[i] is here', this.games[i])
-              this.urls[i] = 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image
+              this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
             }
             console.log('array urls', this.urls)
             this.$message.success('Query successfully')
