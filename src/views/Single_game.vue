@@ -1,110 +1,144 @@
 <template>
 <div>
-  <a-breadcrumb separator=">" style="color: white; margin-top: 10px; margin-left: 10px">
-    <router-link to="/store">
-      <a-breadcrumb-item style="color: white">Store</a-breadcrumb-item>
-    </router-link>
-    <router-link to="/racing">
-      <a-breadcrumb-item style="color: white">Racing</a-breadcrumb-item>
-    </router-link>
-    <a-breadcrumb-item style="color: white">{{this.game.name}}</a-breadcrumb-item>
-  </a-breadcrumb>
-  <a-row type="flex" justify="center" align="top" style="margin-top: 30px">
-    <a-col :span="6.5">
-      <img :src="this.game_url" alt="game line" style="width: 350px; height: 238px">
-    </a-col>
-    <a-col :span="6.5">
+  <strong style="font-size: 25px">{{this.game.name}}</strong>
+  <br />
+  <a-row type="flex" justify="center" style="margin-top: 30px">
+    <a-col :span="9">
       <video width="350px" height="238px" controls>
-        <source src="https://www.sustech.edu.cn/wp-content/uploads/物理系林君浩团队在本征磁性拓扑绝缘体表面精细结构表征研究中取得重要进展.mp4" type="video/mp4">
-        <source src="https://www.sustech.edu.cn/wp-content/uploads/物理系林君浩团队在本征磁性拓扑绝缘体表面精细结构表征研究中取得重要进展.mp4" type="video/ogg" />
-        <source src="https://www.sustech.edu.cn/wp-content/uploads/物理系林君浩团队在本征磁性拓扑绝缘体表面精细结构表征研究中取得重要进展.mp4" type="video/webm" />
+        <source :src="video_url" type="video/mp4">
+        <source :src="video_url" type="video/ogg" />
+        <source :src="video_url" type="video/webm" />
         Your browser does not support the video tag.
       </video>
     </a-col>
   </a-row>
   <a-row type="flex" justify="center">
-    <a-col :span="13">
-      <strong style="font-size: 16px">Score</strong>
-      <a-rate style="margin-left: 16px" v-model="score" />
-      <br />
-      <br />
-      <strong style="font-size: 16px">Description</strong>
-      <br />
-      <p>price: {{this.game.price}}</p>
-      <p>
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-        xxxxxxxxxxxxxxxxx
-      </p>
+    <div v-for="(pic, index) in pic_url" :key="index">
+      <a-col :span="3">
+        <img :src=pic alt="game line" style="width: 175px; height: 119px">
       </a-col>
+    </div>
+  </a-row>
+  <a-row type="flex" justify="center">
+    <a-col :span="6">
+      <strong style="font-size: 16px; color: darkorange">Release date</strong>
+      <p>{{this.game.release_date}}</p>
+      <strong style="font-size: 16px; color: darkorange">Price </strong>
+      <p>{{this.game.price}}$</p>
+    </a-col>
+    <a-col :span="6">
+      <strong style="font-size: 16px; color: darkorange">Score</strong>
+      <a-rate style="margin-left: 16px" v-model="score" :disabled="true" />
+      <br />
+      <strong style="font-size: 16px; color: darkorange">Discount </strong>
+      <p>{{this.game.discount_rate}} from {{this.game.discount_start}} to {{this.game.discount_end}}</p>
+    </a-col>
+  </a-row>
+  <a-row type="flex" justify="center">
+    <a-col :span="12">
+      <strong style="font-size: 16px; color: darkorange">Description</strong>
+      <p>
+        {{this.game.description}}
+      </p>
+    </a-col>
   </a-row>
   <a-button v-if="game_status === 'purchase'" type="primary" style="margin-left: 800px; margin-top: 20px" @click="purchaseGame">
     Purchase
   </a-button>
-  <a-button v-else-if="game_status === 'download'" type="primary" style="margin-left: 800px; margin-top: 20px" @click="downloadGame">
+  <a-button v-else type="primary" style="margin-left: 800px; margin-top: 20px" @click="downloadGame">
     Download
   </a-button>
-  <a-button v-else type="primary" style="margin-left: 800px; margin-top: 20px" disabled="true" @click="downloadGame">
-    Download
-  </a-button>
+  <br />
+  <a-list v-if="dlc.length > 0" item-layout="horizontal" :data-source="dlc_name" al>
+    <strong style="font-size: 25px; margin-left: 300px; color: white">DLC</strong>
+    <br />
+    <div v-for="(d, index) in dlc" :key="index" style="margin-left: 300px">
+      <a-list-item style="border-style:dashed;border-color:cadetblue;margin-top:10px;border-radius: 25px;width:600px;">
+        <a-icon type="smile" theme="twoTone" style="margin-left: 15px;margin-right: 5px" />
+<!--        <span style="color: white;margin-right: 300px">{{dlc_descrip[index]}}</span>-->
+        <a-list-item-meta
+          :description="dlc_descrip[index]"
+          style="margin-left: 10px"
+        >
+        </a-list-item-meta>
+<!--        <a-button v-if="dlc_status[index] === 0" type="primary" shape="circle" @click="purchaseGame">-->
+<!--          Buy-->
+<!--        </a-button>-->
+<!--        <a-button type="primary" shape="circle" icon="download" :size="size" />-->
+      </a-list-item>
+    </div>
+  </a-list>
   <br />
   <strong style="font-size: 25px; margin-left: 300px">Comments</strong>
   <br />
   <div style="margin-left: 300px; margin-top: 20px; width: 600px">
     <a-list
-      v-if="comments.length"
+      v-if="comments.length > 0"
       :data-source="comments"
       :header="`${comments.length} ${comments.length > 1 ? 'replies' : 'reply'}`"
       item-layout="horizontal"
     >
       <div v-for="(comment, index) in comments" :key="index">
-        <a-list-item slot="renderItem" slot-scope="comment">
+        <a-list-item>
           <a-comment
             :author="comment.user_name"
-            :avatar="comment.avatar"
+            :avatar="/api/user/avatar/" + comments[i].user_id
             :content="comment.content"
-            :datetime="comment.datetime"
+            :datetime="comment.createAt"
+            style="margin-left: 50px"
           />
+          <a-rate :value="comment.grade" :disabled="true"/>
+          <a-button type="danger" size="small" style="margin-left: 20px" @click="reportComment(comment.id)">
+            Report
+          </a-button>
         </a-list-item>
-        <br />
-        <a-rate :value="comment.grade" />
       </div>
     </a-list>
-    <a-comment>
-      <a-avatar
-        slot="avatar"
-        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-        alt="Han Solo"
-      />
-      <div slot="content">
-        <a-form :form="commentForm" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-          <a-form-item>
-            <strong style="font-size: 16px">Score</strong>
-            <a-rate style="margin-left: 16px" v-model="this.commentForm.score" />
-          </a-form-item>
-          <a-form-item>
-            <a-textarea :rows="4" v-model="this.commentForm.content" />
-          </a-form-item>
-          <a-form-item>
-          </a-form-item>
-          <a-form-item>
-            <a-button html-type="submit" :loading="submitting" type="primary" @click="submitComments">
-              Add Comment
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </div>
-    </a-comment>
+    <a-form :form="commentForm" style="border-style: solid;border-color: dodgerblue;border-radius: 25px;">
+      <a-form-item>
+        <strong style="font-size: 20px;margin-left:15px;color: cadetblue">Add your comments here</strong>
+      </a-form-item>
+      <a-form-item>
+        <a-form-item>
+          <a-textarea
+            :rows="2"
+            v-model="commentForm.content"
+            placeholder="write something to share..."
+            style="margin-left:60px;width: 500px"/>
+        </a-form-item>
+        <a-icon type="star" style="color: yellow; margin-left: 10px" />
+        <strong style="font-size: 16px; margin-left: 5px;margin-right: 5px; color: white">Score</strong>
+        <a-icon type="star" style="color: yellow" />
+        <a-select v-model="commentForm.score_comment" style="margin-left: 10px; width: 60px">
+          <a-select-option value="1">
+            1
+          </a-select-option>
+          <a-select-option value="2">
+            2
+          </a-select-option>
+          <a-select-option value="3">
+            3
+          </a-select-option>
+          <a-select-option value="4">
+            4
+          </a-select-option>
+          <a-select-option value="5">
+            5
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item>
+        <a-button style="margin-left: 450px" html-type="submit" :loading="submitting" type="primary" @click="submitComments">
+           Submit
+        </a-button>
+      </a-form-item>
+    </a-form>
   </div>
 </div>
 </template>
 
 <script>
+import qs from 'qs'
 import moment from 'moment'
 export default {
   name: 'single_game',
@@ -116,20 +150,33 @@ export default {
       moment,
       game: {},
       score: 2,
-      game_url: '',
+      pic_url: [],
       balance: 0,
-      game_status: 'purchase',
+      game_status: '',
       info_list: [],
       commentForm: {
-        score: 0,
+        score_comment: '',
         content: ''
-      }
+      },
+      gameContent: [],
+      game_pic: [],
+      game_video: {},
+      game_install: {},
+      video_url: '',
+      dlc: [],
+      dlc_name: [],
+      dlc_price: [],
+      dlc_status: [],
+      dlc_descrip: [],
+      comment_userAvatar: [],
+      user_id: 0
     }
   },
   created () {
     this.initialPage()
     this.gameStatus()
     this.getScoreComment()
+    this.getDLC()
   },
   // watch: {
   //   // 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
@@ -137,11 +184,54 @@ export default {
   // },
   methods: {
     initialPage () {
-      console.log('router query here', this.$route.query.target_game)
       this.game = this.$route.query.target_game
-      console.log('pass game here', this.game)
-      this.game_url = 'http://10.17.91.184/game/getPhoto/' + this.game.front_image
-      console.log('game_url', this.game_url)
+      // this.pic_url = 'http://10.17.91.184/game/getPhoto/' + this.game.front_image
+      this.score = this.game.score
+      this.$http.get('/game/info', {
+        params: {
+          id: this.game.id
+        }
+      })
+        .then((response) => {
+          var numPic = 0
+          if (response.status === 200 && response.data.code === 0) {
+            this.gameContent = response.data.data.game_content
+            for (var i = 0; i < this.gameContent.length; i++) {
+              if (this.gameContent[i].type === 'installation') {
+                this.game_install = this.gameContent[i]
+              } else if (this.gameContent[i].type === 'video') {
+                this.game_video = this.gameContent[i]
+                this.video_url = 'http://10.17.91.184/game/getVideo/' + this.game_video.name
+              } else {
+                this.game_pic[numPic] = this.gameContent[i]
+                this.pic_url[numPic] = 'http://10.17.91.184/game/getPhoto/' + this.game_pic[numPic].name
+                numPic = numPic + 1
+              }
+            }
+            this.$message.success('Query game info successfully')
+          } else {
+            // this.$message.error('Error!')
+            // this.$message.error(response.data.msg)
+            this.$message.error('query info Error!')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      this.$http.get('/api/user/info')
+        .then((response) => {
+          if (response.status === 200 && response.data.code === 0) {
+            // this.profile = response.data.data
+            this.balance = response.data.data.balance
+            this.user_id = response.data.data.id
+          } else {
+            // this.$message.error('Error!')
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     // getParams () {
     //   console.log('which game is here', this.$route.query.which_game)
@@ -179,20 +269,14 @@ export default {
       //   game_id: this.game.id
       // }
       this.$http.get('/game/status', {
-        headers: {
-          token: '4abb359b-81ab-4fb2-9717-36e3ac67d728'
-        },
         params: {
           game_id: this.game.id
         }
       })
         .then((response) => {
-          console.log(response.data.data)
           if (response.status === 200 && response.data.code === 0) {
-            console.log('query status return', response.data.data)
             this.$message.success('Query successfully')
             this.game_status = response.data.data
-            console.log('query status', this.game_status)
             // this.profile = response.data.data
           } else {
             // this.$message.error('Error!')
@@ -204,34 +288,14 @@ export default {
         })
     },
     purchaseGame () {
-      var objj = {
-        token: ''
-      }
-      this.$http.get('/api/user/info', objj)
-        .then((response) => {
-          console.log(response.data.data)
-          if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Query successfully')
-            // this.profile = response.data.data
-            this.balance = response.data.data.balance
-          } else {
-            // this.$message.error('Error!')
-            this.$message.error(response.data.msg)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
       if (this.balance >= this.game.price) {
         var r = confirm('Are you sure to buy this game?')
         if (r === true) {
-          var obji = {
-            user_id: 15752,
+          this.$http.post('/game/purchase', qs.stringify({
+            user_id: this.user_id,
             game_id: this.game.id
-          }
-          this.$http.post('/game/purchase', obji)
+          }))
             .then((response) => {
-              console.log(response.data)
               // if (response.status === 200 && response.code === 0) {
               //   this.$message.success('Create successfully')
               // } else {
@@ -239,6 +303,7 @@ export default {
               // }
               if (response.status === 200 && response.data.code === 0) {
                 this.$message.success('Purchase successfully')
+                this.game_status = 'download'
               } else {
                 this.$message.error(response.data.msg)
               }
@@ -252,34 +317,15 @@ export default {
       }
     },
     downloadGame () {
-      var objj = {
-        user_id: '',
-        game_id: this.game.id
-      }
-      this.$http.get('/game/download', objj)
-        .then((response) => {
-          console.log(response.data.data)
-          if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Download successfully')
-            // this.profile = response.data.data
-          } else {
-            // this.$message.error('Error!')
-            this.$message.error(response.data.msg)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      window.location.href = 'http://10.17.91.184/game/download?type=installation&name=' + this.game_install.name
     },
-    getScoreComment () {
-      this.$http.get('/comment/GID/' + this.game.id)
+    async getScoreComment () {
+      await this.$http.get('/comment/GID/' + this.game.id)
         .then((response) => {
-          console.log(response.data.data)
           if (response.status === 200 && response.data.code === 0) {
             this.$message.success('Query comments successfully')
-            this.comments = response.data.info_list
-
-            // this.profile = response.data.data
+            this.comments = response.data.data
+            console.log('display comments', this.comments)
           } else {
             // this.$message.error('Error!')
             this.$message.error(response.data.msg)
@@ -288,17 +334,35 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      if (this.comments.length > 0) {
+        for (var i = 0;i < this.comments.length;i++){
+          this.$http.get('/api/user/avatar/' + this.comments[i].user_id)
+          .then((response) => {
+            console.log('Query avatar back', typeof(response.data))
+            if (response.status === 200 && response.data.code === 0) {
+              this.$message.success('Query avatar successfully')
+              this.comment_userAvatar[i] = response.data
+            } else {
+              // this.$message.error('Error!')
+              this.$message.error(response.data.msg)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        }
+      }
     },
     submitComments () {
+      console.log('transmit score', this.commentForm.score_comment)
       var obji = {
-        user_id: '',
-        game_id: this.game.id,
-        comments: this.commentForm.content,
-        score: this.commentForm.score
+        UID: this.user_id,
+        GID: this.game.id,
+        content: this.commentForm.content,
+        grade: Number(this.commentForm.score_comment)
       }
-      this.$http.post('/comment/submit', obji)
+      this.$http.post('/comment', obji)
         .then((response) => {
-          console.log(response.data)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
@@ -313,7 +377,99 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      this.$http.get('/comment/GID/' + this.game.id)
+        .then((response) => {
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('Query comments successfully')
+            this.comments = response.data.data
+            console.log('display comments', this.comments)
+          } else {
+            // this.$message.error('Error!')
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    getDLC () {
+      this.$http.get('/game/dlc/list', {
+        params: {
+          game_id: this.game.id
+        }
+      })
+        .then((response) => {
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('get DLC successfully')
+            this.dlc = response.data.data
+            if (this.dlc.length > 0) {
+              for (var i = 0; i < this.dlc.length; i++) {
+                this.dlc_name[i] = this.dlc[i].name
+                this.dlc_price[i] = 'price: ' + this.dlc[i].price.toString() + '$'
+                this.dlc_status[i] = 0
+                this.dlc_descrip[i] = 'name: ' + this.dlc[i].name + '  price: $' + this.dlc[i].price.toString()
+              }
+            }
+          } else {
+            // this.$message.error('Error!')
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    reportComment (index) {
+      this.$http.post('/api/user/comment/report', qs.stringify({
+        comment_id: index,
+        reason: ''
+      }))
+        .then((response) => {
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('Report successfully')
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
+    // purchaseDLC (index) {
+    //   if (this.balance >= this.dlc[index].price) {
+    //     var r = confirm('Are you sure to buy this dlc?')
+    //     if (r === true) {
+    //       this.$http.post('/game/dlc/purchase', qs.stringify({
+    //         id: index
+    //       }))
+    //         .then((response) => {
+    //           console.log('purchase dlc success', response.data)
+    //           // if (response.status === 200 && response.code === 0) {
+    //           //   this.$message.success('Create successfully')
+    //           // } else {
+    //           //   this.$message.error('Error!')
+    //           // }
+    //           if (response.status === 200 && response.data.code === 0) {
+    //             this.$message.success('Purchase successfully')
+    //             this.game_status = 'download'
+    //             console.log('game status after buy', this.game_status)
+    //           } else {
+    //             this.$message.error(response.data.msg)
+    //           }
+    //         })
+    //         .catch((error) => {
+    //           console.log(error)
+    //         })
+    //     }
+    //   } else {
+    //     alert('No sufficient funds')
+    //   }
+    // }
   }
 }
 </script>

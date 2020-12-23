@@ -128,6 +128,15 @@
               </a-upload>
             </div>
           </a-tab-pane>
+          <a-tab-pane key="4" tab="Reported comments">
+            <a-table :columns="cols" :data-source="report_back">
+              <span slot="toDelete" slot-scope="text,record">
+                <a-button type="danger" shape="round" @click="deleteComment(record)">
+                  Delete
+                </a-button>
+              </span>
+            </a-table>
+          </a-tab-pane>
         </a-tabs>
       </a-col>
     </a-row>
@@ -136,7 +145,32 @@
 
 <script>
 import qs from 'qs'
-
+const cols = [
+  {
+    title: 'Comment ID',
+    dataIndex: 'comment_id',
+    key: 'comment_id'
+  },
+  {
+    title: 'Content',
+    dataIndex: 'content',
+    key: 'content'
+  },
+  {
+    title: 'Game ID',
+    dataIndex: 'game_id',
+    key: 'game_id'
+  },
+  {
+    title: 'Reportee ID',
+    dataIndex: 'reportee_id',
+    key: 'reportee_id'
+  },
+  {
+    title: 'Delete Comment',
+    scopedSlots: { customRender: 'toDelete' }
+  }
+]
 export default {
   name: 'Admin',
   data () {
@@ -164,8 +198,15 @@ export default {
       current_role: '',
       headers: {
         authorization: 'authorization-text'
-      }
+      },
+      report_back: [],
+      report_detail: [],
+      cols,
+      report_id: 0
     }
+  },
+  created () {
+    this.getReport()
   },
   methods: {
     callback (key) {
@@ -307,6 +348,78 @@ export default {
       } else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} file upload failed.`)
       }
+    },
+    async getReport () {
+      await this.$http.get('/api/admin/comment/report/list', {
+        params: {
+          page_num: 0,
+          page_size: 6
+        }
+      })
+        .then((response) => {
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.data.code === 0) {
+            this.$message.success('get report successfully')
+            console.log('see what', response.data)
+            this.report_back = response.data.data
+            console.log('report back1', this.report_back)
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      console.log('report back2', this.report_back)
+      for (var i = 0; i < this.report_back.length; i++) {
+        this.$http.get('/api/admin/comment/report', {
+          params: {
+            comment_id: this.report_back[i].comment_id
+          }
+        })
+          .then((response) => {
+            // if (response.status === 200 && response.code === 0) {
+            //   this.$message.success('Create successfully')
+            // } else {
+            //   this.$message.error('Error!')
+            // }
+            if (response.status === 200 && response.data.code === 0) {
+              this.$message.success('get detail successfully')
+              this.report_detail[i] = response.data.data
+            } else {
+              this.$message.error(response.data.msg)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    },
+    deleteComment (comment) {
+      // console.log('post id type',typeof(comment.comment_id))
+      this.report_id = comment.comment_id
+      console.log('report id', this.report_id)
+      this.$http.post('/api/admin/comment/delete', qs.stringify({
+        comment_id: this.report_id
+      }))
+        .then((response) => {
+          console.log(response)
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.code === 0) {
+            this.$message.success('Delete successfully')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 }

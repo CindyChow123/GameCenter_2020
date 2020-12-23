@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Descriptions, Carousel, Avatar, Divider, PageHeader, Breadcrumb, Upload, Switch, Statistic, Radio, Table, DatePicker, InputNumber, Collapse, Form, Steps, Tag, Tooltip, Select, Comment, Popconfirm, Popover, Rate, Result, Drawer } from 'ant-design-vue'
+import { Pagination, Button, LocaleProvider, Layout, Menu, Dropdown, Icon, Tabs, List, Card, Modal, Checkbox, Input, FormModel, message, Descriptions, Carousel, Avatar, Divider, PageHeader, Breadcrumb, Upload, Switch, Statistic, Radio, Table, DatePicker, InputNumber, Collapse, Form, Steps, Tag, Tooltip, Select, Comment, Popconfirm, Popover, Rate, Result, Drawer, Slider } from 'ant-design-vue'
 import { Col, Row } from 'ant-design-vue/lib/grid'
 import BreadcrumbItem from 'ant-design-vue/lib/breadcrumb/BreadcrumbItem'
 import BreadcrumbSeparator from 'ant-design-vue/lib/breadcrumb/BreadcrumbSeparator'
@@ -84,6 +84,7 @@ Vue.component(Comment.name, Comment)
 Vue.component(Tooltip.name, Tooltip)
 Vue.component(Breadcrumb.name, Breadcrumb)
 Vue.component(Breadcrumb.Item.name, Breadcrumb.Item)
+Vue.component(Form.name, Form)
 Vue.component(Form.Item.name, Form.Item)
 Vue.component(Steps.name, Steps)
 Vue.component(Steps.Step.name, Steps.Step)
@@ -97,3 +98,4 @@ Vue.component(Rate.name, Rate)
 Vue.component(Result.name, Result)
 // Vue.component(Drawer.name, Drawer)
 Vue.use(Drawer)
+Vue.component(Slider.name, Slider)

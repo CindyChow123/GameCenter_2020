@@ -23,6 +23,7 @@
       <a-col :span="6">
         <div style="width: 256px">
       <a-menu
+        style="height: 600px"
         :default-selected-keys="['All Games']"
         mode="inline"
         theme="dark"
@@ -162,8 +163,6 @@ export default {
             for (let i = 0; i < this.games.length; i++) {
               console.log('Game[i] is here', this.games[i])
               this.urls[i] = 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image
-              // var obji = { i: 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image }
-              // this.urls.assign(obji)
             }
             console.log('array urls', this.urls)
             this.$message.success('Query successfully')
@@ -217,8 +216,6 @@ export default {
             for (let i = 0; i < this.games.length; i++) {
               console.log('Game[i] is here', this.games[i])
               this.urls[i] = 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image
-              // var obji = { i: 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image }
-              // this.urls.assign(obji)
             }
             console.log('array urls', this.urls)
             this.$message.success('Query successfully')
