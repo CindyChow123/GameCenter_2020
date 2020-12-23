@@ -62,7 +62,7 @@
               </a>
               <a-avatar
                 slot="avatar"
-                :src="'http://10.17.91.184/api/user/avatar/'+item.fr.id"
+                :src="'http://47.115.50.249/api/user/avatar/'+item.fr.id"
               />
             </a-list-item-meta>
             <a-popover v-model="item.fr.chatVisible" title="Message" trigger="click">
@@ -88,7 +88,7 @@ export default {
       msg: [],
       name: '',
       email: '',
-      path: 'http://10.17.91.184/api/user/avatar/',
+      path: 'http://47.115.50.249/api/user/avatar/',
       bio: '',
       balance: null
     }

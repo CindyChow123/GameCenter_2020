@@ -6,7 +6,7 @@
           <img
             slot="cover"
             alt="example"
-            :src="'http://10.17.91.184/api/user/collection/download'+item.path"
+            :src="'http://47.115.50.249/api/user/collection/download'+item.path"
           />
           <a-card-meta :title="item.title" :description="item.description">
           </a-card-meta>

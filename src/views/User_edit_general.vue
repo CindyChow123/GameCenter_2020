@@ -17,7 +17,7 @@
           list-type="picture-card"
           class="avatar-uploader"
           :show-upload-list="false"
-          action="http://10.17.91.184/api/user/edit/avatar"
+          action="http://47.115.50.249/api/user/edit/avatar"
           @change="handleChange"
           :headers="this.header"
         >

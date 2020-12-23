@@ -8,7 +8,7 @@
   >
     <a-list-item slot="renderItem" slot-scope="item">
       <a-col span="1">
-        <a-avatar shape="square" :size="64" :src="'http://10.17.91.184/game/getPhoto/'+item.fi" />
+        <a-avatar shape="square" :size="64" :src="'http://47.115.50.249/game/getPhoto/'+item.fi" />
       </a-col>
       <a-col span="15">
         <a-comment id="comment">

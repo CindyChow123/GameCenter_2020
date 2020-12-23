@@ -49,7 +49,7 @@
                 slot="avatar"
                 shape="square"
                 :size="64"
-                :src="'http://10.17.91.184/game/getPhoto/'+item.fi"
+                :src="'http://47.115.50.249/game/getPhoto/'+item.fi"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -140,7 +140,7 @@ export default {
       // var re
       for (i = 0; i < len; i++) {
         if (gcObject[i].type === 'installation') {
-          window.location.href = 'http://10.17.91.184/game/download/?name=' + gcObject[i].name + '&type=installation'
+          window.location.href = 'http://47.115.50.249/game/download/?name=' + gcObject[i].name + '&type=installation'
           console.log(gcObject[i])
         }
       }

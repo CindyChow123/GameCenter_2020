@@ -3,7 +3,7 @@
   <div class="page">
     <a-row class="page_header">
       <a-col :span="18" style="padding-right: 30px;">
-        <a-avatar shape="square" :size="64" :src="'http://10.17.91.184/api/user/avatar/'+this.$route.query.id" style="margin-bottom: 15px;position: absolute" />
+        <a-avatar shape="square" :size="64" :src="'http://47.115.50.249/api/user/avatar/'+this.$route.query.id" style="margin-bottom: 15px;position: absolute" />
         <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px">{{ this.name }}</h1>
         <span>Email: {{this.email}}</span>
       </a-col>

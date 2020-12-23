@@ -86,7 +86,7 @@ export default {
       columns,
       name: '',
       email: '',
-      path: 'http://10.17.91.184/api/user/avatar/',
+      path: 'http://47.115.50.249/api/user/avatar/',
       id: null,
       gameList: [],
       glist: [],

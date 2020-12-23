@@ -170,7 +170,7 @@
         </a-form-model-item>
         <a-form-model-item label="Upload the file here:">
           <a-upload
-            action="http://10.17.91.184/game/dlc/upload"
+            action="http://47.115.50.249/game/dlc/upload"
             :data="{id:this.form.game_id}"
             :headers="this.header"
             :default-file-list="this.FileList"
