@@ -117,14 +117,16 @@ export default {
         if (valid) {
           this.submitting = true
           this.form.role = this.$route.query.role
-          // console.log(this.form.password)
+          console.log(this.form.password)
           // const pass = this.$md5(this.form.password)
-          // let temp = this.form
-          // temp.password = pass
-          // temp = qs.stringify(temp)
-          // const result = await this.$http.post('/api/user/login', temp, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-          // console.log(result)
-          const result = await this.$http.post('/api/user/login', qs.stringify(this.form), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          let temp = this.form
+          // if (!window.localStorage.getItem('##Cses')) {
+          //   temp.password = pass
+          // }
+          temp = qs.stringify(temp)
+          const result = await this.$http.post('/api/user/login', temp, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          console.log(result)
+          // const result = await this.$http.post('/api/user/login', qs.stringify(this.form), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
           if (result.status !== 200 || result.data.code !== 0) {
             this.submitting = false
             return this.$message.error(result.data.msg)

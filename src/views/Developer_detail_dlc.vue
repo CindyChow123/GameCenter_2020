@@ -1,140 +1,3 @@
-<!--<template>-->
-<!--&lt;!&ndash;  :columns="columns"&ndash;&gt;-->
-<!--  <a-col :span="20" style="margin-left: 25px">-->
-<!--    <h1 style="color: aliceblue">My games</h1>-->
-<!--    <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail', query: {id: '-1',user_id: user_id}})" style="display: inline;margin-bottom: 10px">-->
-<!--      Create a new Downloadable Content-->
-<!--    </a-button>-->
-<!--    <a-table-->
-<!--      :columns="columns"-->
-<!--      :data-source="DLCList"-->
-<!--      id="develop-home-app-left-table"-->
-<!--      :pagination="false"-->
-<!--      rowKey="id"-->
-<!--    >-->
-<!--      <template-->
-<!--        v-for="col in ['name', 'price', 'visible']"-->
-<!--        :slot="col"-->
-<!--        slot-scope="text, record"-->
-<!--      >-->
-<!--        <div :key="col">-->
-<!--          <a-input-->
-<!--            v-if="record.editable"-->
-<!--            style="margin: -5px 0"-->
-<!--            :value="text"-->
-<!--            @change="handleChange"-->
-<!--          />-->
-<!--          <template v-else>-->
-<!--            {{ text }}-->
-<!--          </template>-->
-<!--        </div>-->
-<!--      </template>-->
-<!--      <template slot="operation" slot-scope="text, record, index">-->
-<!--        <div class="editable-row-operations">-->
-<!--          <span v-if="record.editable">-->
-<!--            <a @click="save(index)">Save</a>-->
-<!--            <a-popconfirm title="Sure to cancel?" @confirm="record.editable = false;cancel(index)">-->
-<!--              <a>Cancel</a>-->
-<!--            </a-popconfirm>-->
-<!--          </span>-->
-<!--          <span v-else>-->
-<!--            <a :disabled="editingKey !== ''" @click="record.editable = true;edit(index)">Edit</a>-->
-<!--          </span>-->
-<!--        </div>-->
-<!--      </template>-->
-<!--    </a-table>-->
-<!--  </a-col>-->
-<!--</template>-->
-<!--<script>-->
-<!--const columns = [-->
-<!--  {-->
-<!--    title: 'DLC Name',-->
-<!--    dataIndex: 'name',-->
-<!--    width: 150,-->
-<!--    scopedSlots: { customRender: 'name' }-->
-<!--  },-->
-<!--  {-->
-<!--    title: 'Price',-->
-<!--    dataIndex: 'price',-->
-<!--    scopedSlots: { customRender: 'price' }-->
-<!--  },-->
-<!--  {-->
-<!--    title: 'Visible in store',-->
-<!--    dataIndex: 'visible',-->
-<!--    scopedSlots: { customRender: 'visible' }-->
-<!--  },-->
-<!--  {-->
-<!--    title: 'operation',-->
-<!--    dataIndex: 'operation',-->
-<!--    scopedSlots: { customRender: 'operation' }-->
-<!--  }-->
-<!--]-->
-<!--export default {-->
-<!--  data () {-->
-<!--    return {-->
-<!--      columns,-->
-<!--      game_id: null,-->
-<!--      DLCList: [],-->
-<!--      editingKey: '',-->
-<!--      cacheData: null-->
-<!--    }-->
-<!--  },-->
-<!--  created () {-->
-<!--    // this.game_id = this.$route.query.id-->
-<!--    this.getDLCList()-->
-<!--    this.cacheData = this.DLCList.map(item => ({ ...item }))-->
-<!--  },-->
-<!--  methods: {-->
-<!--    async getDLCList () {-->
-<!--      const result = await this.$http.get('/game/dlc/list', { params: { game_id: this.game_id } })-->
-<!--      if (result.status !== 200 || result.data.code !== 0) {-->
-<!--        return this.$message.error(result.data.msg)-->
-<!--      }-->
-<!--      this.DLCList = result.data.data-->
-<!--      for (var i = 0; i < this.DLCList.length; i++) {-->
-<!--        this.DLCList[i].editable = false-->
-<!--      }-->
-<!--      console.log(this.DLCList)-->
-<!--    },-->
-<!--    edit (index) {-->
-<!--      this.DLCList[index].editable = true-->
-<!--      this.editingKey = this.DLCList[index].id-->
-<!--      // const newDLC = [...this.DLCList]-->
-<!--      // const target = newDLC.filter(item => index === item.id)-->
-<!--      // this.editingKey = index-->
-<!--      // if (target) {-->
-<!--      //   target.editable = true-->
-<!--      //   this.DLCList = newDLC-->
-<!--      // }-->
-<!--      // console.log(target)-->
-<!--    },-->
-<!--    save (index) {-->
-<!--    },-->
-<!--    cancel (index) {-->
-<!--      const temp = this.DLCList-->
-<!--      temp[index].editable = false-->
-<!--      this.DLCList = temp-->
-<!--      this.editingKey = ''-->
-<!--      // const newDLC = [...this.DLCList]-->
-<!--      // const target = newDLC.filter(item => index === item.id)[0]-->
-<!--      // this.editingKey = ''-->
-<!--      // if (target) {-->
-<!--      //   Object.assign(target, this.cacheData.filter(item => index === item.id)[0])-->
-<!--      //   delete target.editable-->
-<!--      //   this.data = newDLC-->
-<!--      // }-->
-<!--    },-->
-<!--    handleChange () {-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
-<!--<style>-->
-<!--.editable-row-operations a {-->
-<!--  margin-right: 8px;-->
-<!--}-->
-<!--</style>-->
-<!--:label-col="labelCol" :wrapper-col="wrapperCol"-->
 <template>
   <a-col :span="20" style="margin-left: 25px">
     <h1 style="color: rgba(238,137,61,0.95)">Requirement</h1>
@@ -157,7 +20,7 @@
         </a-form-model-item>
         <a-form-model-item label="Price:" ref="price" prop="price">
           <a-input
-            v-model.number="form.price"
+            v-model="form.price"
             class="modify-input"
             @blur="
             () => {
@@ -167,17 +30,6 @@
         </a-form-model-item>
         <a-form-model-item label="Open to public:" ref="visible" prop="visible">
           <a-switch v-model="form.visible" id="switch" />
-        </a-form-model-item>
-        <a-form-model-item label="Upload the file here:">
-          <a-upload
-            action="http://47.115.50.249/game/dlc/upload"
-            :data="{id:this.form.game_id}"
-            :headers="this.header"
-            :default-file-list="this.FileList"
-            name="file"
-          >
-            <a-button> <a-icon type="upload" /> Upload </a-button>
-          </a-upload>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -204,19 +56,31 @@
         <a-tag color="#108ee9">{{record.visible}}</a-tag>
       </template>
       <template slot="operation" slot-scope="text, record">
-        <div class="editable-row-operations">
-        <span v-if="record.editable">
-          <a @click="() => save(record.id)">Save</a>
-          <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.id)">
-            <a>Cancel</a>
-          </a-popconfirm>
-        </span>
-          <span v-else>
-          <a :disabled="editingKey !== ''" @click="() => edit(record.id)">Edit</a>
-            <a-divider type="vertical" />
-          <a :disabled="editingKey !== ''" @click="() => upload(record.id)">upload file</a>
-        </span>
-        </div>
+        <a-upload
+          action="http://47.115.50.249/game/dlc/upload"
+          :data="{id:record.id}"
+          :headers="header"
+          :default-file-list="FileList"
+          name="content"
+        >
+          <a-button> <a-icon type="upload" /> Upload </a-button>
+        </a-upload>
+<!--        :headers="this.header"-->
+<!--        :default-file-list="this.FileList"-->
+<!--        slot-scope="text, record"-->
+<!--        <div class="editable-row-operations">-->
+<!--        <span v-if="record.editable">-->
+<!--          <a @click="() => save(record.id)">Save</a>-->
+<!--          <a-popconfirm title="Sure to cancel?" @confirm="() => cancel(record.id)">-->
+<!--            <a>Cancel</a>-->
+<!--          </a-popconfirm>-->
+<!--        </span>-->
+<!--          <span v-else>-->
+<!--          <a :disabled="editingKey !== ''" @click="() => edit(record.id)">Edit</a>-->
+<!--            <a-divider type="vertical" />-->
+<!--          <a :disabled="editingKey !== ''" @click="() => upload(record.id)"></a>-->
+<!--        </span>-->
+<!--        </div>-->
       </template>
     </a-table>
   </a-col>
@@ -289,6 +153,7 @@ export default {
         return this.$message.error(result.data.msg)
       }
       this.data = result.data.data
+      console.log(this.data)
       this.cacheData = this.data.map(item => ({ ...item }))
     },
     handleChange (value, key, column) {
@@ -347,6 +212,9 @@ export default {
           if (result.status !== 200 || result.data.code !== 0) {
             return this.$message.error(result.data.msg)
           }
+          this.form.price = null
+          this.form.visible = null
+          this.form.name = ''
           return this.$message.success('DLC created successfully!')
         }
       })

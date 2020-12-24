@@ -57,12 +57,12 @@
                   <a-menu-item key="4">
                     <router-link to="/register">Register here</router-link>
                   </a-menu-item>
-                  <a-menu-item key="5">
-                    <router-link to="/user">Test Userspace</router-link>
-                  </a-menu-item>
-                  <a-menu-item key="6">
-                    <router-link to="/developer">Test Developer</router-link>
-                  </a-menu-item>
+<!--                  <a-menu-item key="5">-->
+<!--                    <router-link to="/user">Test Userspace</router-link>-->
+<!--                  </a-menu-item>-->
+<!--                  <a-menu-item key="6">-->
+<!--                    <router-link to="/developer">Test Developer</router-link>-->
+<!--                  </a-menu-item>-->
                 </a-menu>
               </template>
             </a-dropdown>

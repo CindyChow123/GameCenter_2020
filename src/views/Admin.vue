@@ -100,7 +100,7 @@
               <a-upload
                 name="manual"
                 :multiple="true"
-                action="http://10.21.40.23/api/admin/manual"
+                action="http://47.115.50.249/api/admin/manual"
                 accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 :headers="headers"
                 @change="handleChange"
@@ -116,7 +116,7 @@
               <a-upload
                 name="file"
                 :multiple="true"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action="http://47.115.50.249/api/admin/manual"
                 :headers="headers"
                 @change="handleChange"
                 style="margin-left:20px;margin-top: 100px"
@@ -199,7 +199,8 @@ export default {
       report_back: [],
       report_detail: [],
       cols,
-      report_id: 0
+      report_id: 0,
+      lock_next: ''
     }
   },
   created () {
@@ -269,15 +270,20 @@ export default {
           console.log(error)
         })
     },
-    changeStatus () {
+    async changeStatus () {
+      if (this.profile.is_locked === 'true') {
+        this.lock_next = 'false'
+      } else {
+        this.lock_next = 'true'
+      }
       var obji = {
         user_id: Number(this.profile.user_id),
         user_email: this.profile.user_email,
         user_name: this.profile.user_name,
-        lock: Boolean(this.profile.lock)
+        lock: this.lock_next
       }
       obji = qs.stringify(obji)
-      this.$http.post('/api/admin/user/account/lock', obji)
+      await this.$http.post('/api/admin/user/account/lock', obji)
         .then((response) => {
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
@@ -285,11 +291,12 @@ export default {
           //   this.$message.error('Error!')
           // }
           if (response.status === 200 && response.data.code === 0) {
-            if (this.profile.is_locked === 'ture') {
-              this.profile.is_locked = 'false'
-            } else {
-              this.profile.is_locked = 'ture'
-            }
+            // if (this.profile.is_locked === 'true') {
+            //   this.profile.is_locked = 'false'
+            // } else {
+            //   this.profile.is_locked = 'true'
+            // }
+            this.$message.success('Success!')
           } else {
             this.$message.error('Error!')
           }
@@ -297,6 +304,7 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      this.profile.is_locked = this.lock_next
     },
     handleRoleChange (e) {
       this.$http.post('/api/admin/user/assign', {

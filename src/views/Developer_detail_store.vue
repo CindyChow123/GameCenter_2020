@@ -204,7 +204,7 @@ export default {
         ]
       },
       tags: ['Racing', 'Sports', 'Action', 'Adventure', 'Casual'],
-      tag: 'null',
+      tag: 'common',
       inputVisible: false,
       inputValue: '',
       header: {

@@ -9,11 +9,11 @@
       style="margin-left: 40px"
     >
       <h1 style="color: rgba(238,137,61,0.95)">Requirement</h1>
-      <span style="color: rgba(210,121,53,0.95)">The requirements for uploading file.</span>
+      <span style="color: rgba(210,121,53,0.95)">Please upload at least 3 pictures and one video for your store page!</span>
       <a-divider style="margin: 2px 0;background: #999999" />
       <a-form-model-item ref="package" label="The game file package:" prop="package" style="border-bottom: 1px solid #2a8be454">
         <a-upload
-          action="http://10.21.20.191/game/upload"
+          action="http://47.115.50.249/game/upload"
           :data="{id:this.$route.query.id,type:'installation'}"
           :headers="this.header"
           :default-file-list="this.FileList"

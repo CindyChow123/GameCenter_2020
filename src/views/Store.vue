@@ -102,7 +102,7 @@
 
 <script>
 // // @ is an alias to /src
-import qs from 'qs'
+// import qs from 'qs'
 
 export default {
   name: 'Store',
@@ -180,12 +180,12 @@ export default {
       if (menu === 'All Games') {
         tmp = ''
       }
-      var obji = {
-        tag: tmp,
-        name: '',
-        page: this.current - 1
-      }
-      obji = qs.stringify(obji)
+      // var obji = {
+      //   tag: tmp,
+      //   name: '',
+      //   page: this.current - 1
+      // }
+      // obji = qs.stringify(obji)
       this.$http.get('/game/list', {
         params: {
           tag: tmp,

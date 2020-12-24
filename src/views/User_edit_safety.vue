@@ -166,14 +166,18 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
-          const result = await this.$http.post('/api/user/edit/password', qs.stringify(this.form))
-          if (result.status === 200) {
-            if (result.data.code === 0) {
-              this.$message.success('Password changed successful')
-            } else if (result.data.code === -1) {
-              this.$message.error(result.data.msg)
-            }
-          }
+          const pass = this.$md5(this.form.new_password)
+          const temp = this.form
+          temp.new_password = pass
+          console.log(temp)
+          // const result = await this.$http.post('/api/user/edit/password', qs.stringify(temp))
+          // if (result.status === 200) {
+          //   if (result.data.code === 0) {
+          //     this.$message.success('Password changed successful')
+          //   } else if (result.data.code === -1) {
+          //     this.$message.error(result.data.msg)
+          //   }
+          // }
         } else {
           console.log('error submit!!')
           return false
