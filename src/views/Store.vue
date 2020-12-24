@@ -77,7 +77,7 @@
                   :src="urls[index]"
                   height="100" width="100"
                 />
-              <a-card-meta :title="game.name" description="xxxxxxxx">
+              <a-card-meta :title="game.name" :description="game.description">
               </a-card-meta>
               </a-card>
             </router-link>
@@ -164,6 +164,9 @@ export default {
               this.games = response.data.data.content
               for (let i = 0; i < this.games.length; i++) {
                 this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
+                if (this.games[i].description.length >= 9) {
+                  this.games[i].description = this.games[i].description.substring(0, 9)
+                }
               }
             } else {
               // this.$message.error('Error!')
@@ -222,6 +225,9 @@ export default {
             console.log('games', this.games)
             for (let i = 0; i < this.games.length; i++) {
               this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
+              if (this.games[i].description.length >= 9) {
+                this.games[i].description = this.games[i].description.substring(0, 9)
+              }
             }
           } else {
             // this.$message.error('Error!')

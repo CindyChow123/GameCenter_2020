@@ -321,7 +321,7 @@ export default {
       }
     },
     downloadGame () {
-      window.location.href = 'http://47.115.50.249/game/download?type=installation&name=' + this.game_install.name
+      window.location.href = 'http://47.115.50.249/game/installation?type=installation&name=' + this.game_install.name + '&date=' + this.game.release_date
     },
     async getScoreComment () {
       const response = await this.$http.get('/comment/GID/' + this.game.id)
@@ -338,7 +338,7 @@ export default {
       }
     },
     submitComments () {
-      if (window.sessionStorage.getItem('token')) {
+      if (window.sessionStorage.getItem('token') && this.game_status === 'download') {
         var obji = {
           UID: this.user_id,
           GID: this.game.id,

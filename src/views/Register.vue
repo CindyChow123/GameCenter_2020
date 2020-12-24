@@ -12,26 +12,26 @@
           <a-form-model-item>
             <strong style="font-size: 25px; color: cadetblue; margin-left: 40px">Register Now</strong>
           </a-form-model-item>
-          <a-form-model-item label="Name">
+          <a-form-model-item label="Name" prop="name">
             <a-input
               v-model="form.name"
               placeholder="please input your name"
               style="width: 250px"/>
           </a-form-model-item>
-          <a-form-model-item label="E-mail">
+          <a-form-model-item label="E-mail" prop="email">
             <a-input
               v-model="form.email"
               placeholder="please input the binding e-mail"
               style="width: 250px"/>
           </a-form-model-item>
-          <a-form-model-item label="Password">
+          <a-form-model-item label="Password" prop="password">
           <a-input
             v-model="form.password"
             placeholder="please input the password"
             type="password"
             style="width: 250px"/>
           </a-form-model-item>
-          <a-form-model-item label="Role">
+          <a-form-model-item label="Role" prop="role">
             <a-checkbox-group v-model="form.role">
               <a-checkbox value="p" name="play">
                 player
@@ -165,17 +165,16 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: 'Please input user name', trigger: 'blur' },
-          { min: 1, max: 8, message: 'Length should be 1 to 8', trigger: 'blur' }
+          { required: true, message: 'Please input user name', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: 'Please input user email', trigger: 'blur' },
-          { validator: this.validatorEmail }
+          { required: true, message: 'Please input user email', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Please input account password', trigger: 'blur' },
-          { min: 6, max: 8, message: 'Length should be 6 to 8', trigger: 'blur' },
-          { validator: this.validatorPassword }
+          { required: true, message: 'Please input account password', trigger: 'blur' }
+        ],
+        role: [
+          { required: true, message: 'Please input account role', trigger: 'blur' }
         ]
       }
     }
