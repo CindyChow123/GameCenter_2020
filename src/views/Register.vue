@@ -29,14 +29,14 @@
             style="width: 250px"/>
           </a-form-model-item>
           <a-form-model-item label="Role">
-            <a-radio-group v-model="form.role">
-              <a-radio value="p">
-                Player
-              </a-radio>
-              <a-radio value="d">
-                Developer
-              </a-radio>
-            </a-radio-group>
+            <a-checkbox-group v-model="form.role">
+              <a-checkbox value="p" name="play">
+                player
+              </a-checkbox>
+              <a-checkbox value="d" name="develop">
+                developer
+              </a-checkbox>
+            </a-checkbox-group>
           </a-form-model-item>
           <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
             <a-button type="primary" @click="onSubmit">
@@ -154,7 +154,7 @@ export default {
         name: '',
         email: '',
         password: '',
-        role: ''
+        role: []
       },
       visible: false,
       conForm: {
@@ -185,17 +185,24 @@ export default {
       //   if (!valid) return false
       // })
       console.log('submit!', this.form)
+      var tmp = ''
+      if (this.form.role.length === 2) {
+        tmp = 'dp'
+      } else if (this.form.role[0] === 'd') {
+        tmp = 'd'
+      } else {
+        tmp = 'p'
+      }
       var that = this
       var obj = {
         name: this.form.name,
         email: this.form.email,
         password: this.form.password,
-        role: this.form.role
+        role: tmp
       }
       obj = qs.stringify(obj)
       this.$http.post('/api/user/register', obj)
         .then((response) => {
-          console.log(response)
           if (response.status === 200) {
             that.$message.success('Register successfully')
           } else {
@@ -250,8 +257,6 @@ export default {
       this.visible = false
     },
     toConfirm () {
-      console.log('submit!', this.conForm)
-      console.log('submit email!', this.form.email)
       var objc = {
         email: this.form.email,
         confirm: parseInt(this.conForm.confirm)
@@ -259,7 +264,6 @@ export default {
       objc = qs.stringify(objc)
       this.$http.post('/api/user/register/confirm', objc)
         .then((response) => {
-          console.log(response)
           if (response.status === 200 && response.code === 0) {
             this.$message.success('Activate successfully')
           } else {
@@ -272,14 +276,12 @@ export default {
         })
     },
     reSend () {
-      console.log('submit!', this.form)
       var objc = {
         email: this.form.email
       }
       objc = qs.stringify(objc)
       this.$http.post('/api/user/register/resend', objc)
         .then((response) => {
-          console.log(response)
           if (response.status === 200 && response.code === 0) {
             this.$message.success('Activate successfully')
           } else {

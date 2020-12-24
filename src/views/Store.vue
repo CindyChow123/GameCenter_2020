@@ -23,6 +23,7 @@
       <a-col :span="6">
         <div style="width: 256px">
       <a-menu
+        style="height: 600px"
         :default-selected-keys="['All Games']"
         mode="inline"
         theme="dark"
@@ -144,7 +145,6 @@ export default {
     //   console.log(a, b, c)
     // },
     onSearch (value) {
-      console.log(value)
       this.$http.get('/game/list', {
         params: {
           tag: '',
@@ -153,20 +153,11 @@ export default {
         }
       })
         .then((response) => {
-          console.log('type of urls', typeof this.urls)
-          console.log('reponse.data is here', response.data)
           if (response.status === 200 && response.data.code === 0) {
             this.games = response.data.data.content
-            console.log('Game Look here', this.games)
-            console.log('Length is here', this.games.length)
             for (let i = 0; i < this.games.length; i++) {
-              console.log('Game[i] is here', this.games[i])
-              this.urls[i] = 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image
-              // var obji = { i: 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image }
-              // this.urls.assign(obji)
+              this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
             }
-            console.log('array urls', this.urls)
-            this.$message.success('Query successfully')
           } else {
             // this.$message.error('Error!')
             this.$message.error(response.data.msg)
@@ -177,7 +168,6 @@ export default {
         })
     },
     handleClick (e) {
-      console.log('click', e.key)
       this.menu_key[0] = e.key
       this.UpdateGate(this.menu_key[0], this.current)
     },
@@ -186,20 +176,16 @@ export default {
       this.UpdateGate(this.menu_key[0], this.current)
     },
     UpdateGate (menu, pagee) {
-      console.log('HERE', menu)
       var tmp = menu
       if (menu === 'All Games') {
         tmp = ''
       }
-      console.log('tmp', tmp)
-      console.log('pagee', pagee)
       var obji = {
         tag: tmp,
         name: '',
         page: this.current - 1
       }
       obji = qs.stringify(obji)
-      console.log(obji)
       this.$http.get('/game/list', {
         params: {
           tag: tmp,
@@ -208,20 +194,11 @@ export default {
         }
       })
         .then((response) => {
-          console.log('type of urls', typeof this.urls)
-          console.log('reponse.data is here', response.data)
           if (response.status === 200 && response.data.code === 0) {
             this.games = response.data.data.content
-            console.log('Game Look here', this.games)
-            console.log('Length is here', this.games.length)
             for (let i = 0; i < this.games.length; i++) {
-              console.log('Game[i] is here', this.games[i])
-              this.urls[i] = 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image
-              // var obji = { i: 'http://10.17.91.184/game/getPhoto/' + this.games[i].front_image }
-              // this.urls.assign(obji)
+              this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
             }
-            console.log('array urls', this.urls)
-            this.$message.success('Query successfully')
           } else {
             // this.$message.error('Error!')
             this.$message.error(response.data.msg)

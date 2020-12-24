@@ -37,9 +37,6 @@
                 <a-button type="primary" @click="onSubmit" style="margin-left: 200px">
                   Create
                 </a-button>
-                <a-button style="margin-left: 2px" @click="resetForm">
-                  Cancel
-                </a-button>
               </a-form-model-item>
             </a-form-model>
           </a-tab-pane>
@@ -128,6 +125,15 @@
               </a-upload>
             </div>
           </a-tab-pane>
+          <a-tab-pane key="4" tab="Reported comments">
+            <a-table :columns="cols" :data-source="report_back">
+              <span slot="toDelete" slot-scope="text,record">
+                <a-button type="danger" shape="round" @click="deleteComment(record)">
+                  Delete
+                </a-button>
+              </span>
+            </a-table>
+          </a-tab-pane>
         </a-tabs>
       </a-col>
     </a-row>
@@ -136,7 +142,32 @@
 
 <script>
 import qs from 'qs'
-
+const cols = [
+  {
+    title: 'Comment ID',
+    dataIndex: 'comment_id',
+    key: 'comment_id'
+  },
+  {
+    title: 'Content',
+    dataIndex: 'content',
+    key: 'content'
+  },
+  {
+    title: 'Game ID',
+    dataIndex: 'game_id',
+    key: 'game_id'
+  },
+  {
+    title: 'Reportee ID',
+    dataIndex: 'reportee_id',
+    key: 'reportee_id'
+  },
+  {
+    title: 'Delete Comment',
+    scopedSlots: { customRender: 'toDelete' }
+  }
+]
 export default {
   name: 'Admin',
   data () {
@@ -164,15 +195,21 @@ export default {
       current_role: '',
       headers: {
         authorization: 'authorization-text'
-      }
+      },
+      report_back: [],
+      report_detail: [],
+      cols,
+      report_id: 0
     }
+  },
+  created () {
+    this.getReport()
   },
   methods: {
     callback (key) {
       console.log(key)
     },
     onSubmit () {
-      console.log('submit!', this.form)
       var obji = {
         user_email: this.form.email,
         user_name: this.form.name,
@@ -182,7 +219,6 @@ export default {
       obji = qs.stringify(obji)
       this.$http.post('/api/admin/user/create', obji)
         .then((response) => {
-          console.log(response)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
@@ -212,9 +248,7 @@ export default {
         }
       })
         .then((response) => {
-          console.log(response.data.data)
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Query successfully')
             // this.profile = response.data.data
             this.profile.user_id = response.data.data.id.toString()
             this.profile.name = response.data.data.name
@@ -245,14 +279,12 @@ export default {
       obji = qs.stringify(obji)
       this.$http.post('/api/admin/user/account/lock', obji)
         .then((response) => {
-          console.log(response.data)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
           //   this.$message.error('Error!')
           // }
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Change successfully')
             if (this.profile.is_locked === 'ture') {
               this.profile.is_locked = 'false'
             } else {
@@ -275,7 +307,6 @@ export default {
         }
       })
         .then((response) => {
-          console.log(response)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
@@ -283,7 +314,6 @@ export default {
           // }
           if (response.status === 200) {
             if (this.profile.role !== e.target.value) {
-              this.$message.success('Change successfully')
               this.profile.role = e.target.value
             }
           } else {
@@ -294,10 +324,6 @@ export default {
           console.log(error)
         })
     },
-    resetForm () {
-      console.log(this.form)
-      this.$refs.ruleForm.resetFields()
-    },
     handleChange (info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
@@ -307,6 +333,71 @@ export default {
       } else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} file upload failed.`)
       }
+    },
+    async getReport () {
+      await this.$http.get('/api/admin/comment/report/list', {
+        params: {
+          page_num: 0,
+          page_size: 6
+        }
+      })
+        .then((response) => {
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.data.code === 0) {
+            this.report_back = response.data.data
+          } else {
+            this.$message.error(response.data.msg)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      for (var i = 0; i < this.report_back.length; i++) {
+        this.$http.get('/api/admin/comment/report', {
+          params: {
+            comment_id: this.report_back[i].comment_id
+          }
+        })
+          .then((response) => {
+            // if (response.status === 200 && response.code === 0) {
+            //   this.$message.success('Create successfully')
+            // } else {
+            //   this.$message.error('Error!')
+            // }
+            if (response.status === 200 && response.data.code === 0) {
+              this.report_detail[i] = response.data.data
+            } else {
+              this.$message.error(response.data.msg)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    },
+    deleteComment (comment) {
+      // console.log('post id type',typeof(comment.comment_id))
+      this.report_id = comment.comment_id
+      this.$http.post('/api/admin/comment/delete', qs.stringify({
+        comment_id: this.report_id
+      }))
+        .then((response) => {
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.code === 0) {
+            this.$message.success('Delete successfully')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 }
