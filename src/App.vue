@@ -2,7 +2,10 @@
     <div id="app">
       <a-layout class="home-container" style="min-height: 100vh">
         <a-layout-header>
-          <div class="logo">GameCenter</div>
+          <div class="logo">
+            <img src="../src/assets/logo1.png" height="50" width="70">
+            GameCenter
+          </div>
           <a-menu
             theme="dark"
             mode="horizontal"
