@@ -31,7 +31,7 @@
                     <router-link :to="{path:'/admin'}" >My space</router-link>
                   </a-menu-item>
                   <a-menu-item key="13" v-if="loginFlagDeveloper">
-                    <router-link :to="{path:'/developer'}">Developer space</router-link>
+                    <router-link :to="{path:'/developer', query:{user: user_id}}">Developer space</router-link>
                   </a-menu-item>
                   <a-menu-item key="2" @click="handleLogout">
                     <router-link to="/store">Log out</router-link>
@@ -69,7 +69,7 @@
           </a-menu>
         </a-layout-header>
         <a-layout-content style="background: black">
-          <router-view @getLoginFlag="getLoginFlag" @getUserId="getUserId" :user_id="user_id"/>
+          <router-view @getLoginFlag="getLoginFlag" @getUserId="getUserId" :user_id="this.user_id"/>
         </a-layout-content>
         <a-layout-footer style="background: black;color: deepskyblue;text-align: center">
           We design ©2020 Created by Us
@@ -114,7 +114,7 @@ export default {
     },
     getUserId (val) {
       this.user_id = val
-      console.log(this.user_id)
+      console.log('app user id', this.user_id)
     },
     handleLogout () {
       this.$http.post('/api/user/logout', null, { headers: { token: window.sessionStorage.getItem('token') } })

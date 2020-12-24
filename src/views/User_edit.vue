@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-breadcrumb style="margin-left: 20px;margin-top: 20px">
-      <a-breadcrumb-item><router-link to="/user">Userspace</router-link></a-breadcrumb-item>
+      <a-breadcrumb-item><router-link :to=this.path>Userspace</router-link></a-breadcrumb-item>
       <a-breadcrumb-item>Edit profile</a-breadcrumb-item>
     </a-breadcrumb>
     <div class="page">
@@ -40,6 +40,19 @@
 export default {
   data () {
     return {
+      path: null
+    }
+  },
+  created () {
+    this.getPath()
+  },
+  methods: {
+    getPath () {
+      if (this.$route.query.role === 'd') {
+        this.path = '/developer'
+      } else if (this.$route.query.role === 'p') {
+        this.path = '/user'
+      }
     }
   }
 }

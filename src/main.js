@@ -7,7 +7,8 @@ import './static/reset.less'
 import md5 from './assets/md5'
 
 Vue.config.productionTip = false
-axios.defaults.baseURL = 'http://47.115.50.249'
+// axios.defaults.baseURL = 'http://47.115.50.249'
+axios.defaults.baseURL = 'http://10.21.20.191'
 // axios.defaults.baseURL = 'http://mockjs.docway.net/mock/1a98zbpmUHR'
 Vue.prototype.$http = axios
 Vue.prototype.$md5 = md5

@@ -175,7 +175,7 @@ export default {
         description: '',
         announce_date: null,
         release_date: null,
-        developer_id: null,
+        developerId: null,
         tag: '',
         discount_start: '',
         discount_end: '',
@@ -214,19 +214,19 @@ export default {
     }
   },
   created () {
+    // this.form.developerId = this.$route.query.user
+    // console.log(this.form.developerId)
     this.getFileInfo()
-    // this.getFormInfo()
-    // this.getFileInfo()
   },
   methods: {
-    handleChange (tag, checked) {
-    },
     submitForm () {
+      console.log(this.form)
       this.$refs.ruleForm.validate(async valid => {
         if (valid) {
           this.form.tag = this.tag
           console.log(this.form.tag)
           const temp = qs.stringify(this.form)
+          // console.log(this.form)
           // upload form - create or update
           let result
           if (this.form.id === '-1') {
@@ -274,7 +274,7 @@ export default {
       callback('Discount must be within 0 and 1')
     },
     disabledDate (current) {
-      return current && current < moment().endOf('day')
+      return current && current < moment().startOf('day')
     },
     handleUpload ({ file, fileList }) {
       if (file.status !== 'uploading') {
@@ -283,7 +283,7 @@ export default {
     },
     async getFileInfo () {
       this.form.id = this.$route.query.id
-      this.form.developer_id = this.$route.query.user_id
+      this.form.developerId = this.$route.query.user
       console.log(this.form)
       if (this.form.id !== '-1') {
         const result = await this.$http.get('/game/info', { params: { id: this.form.id } })

@@ -53,7 +53,8 @@ export default {
   methods: {
     getId () {
       this.id = this.$route.query.id
-      this.user_id = this.$route.query.user_id
+      this.user_id = this.$route.query.user
+      console.log('my id', this.user_id)
       if (this.id === '-1') {
         this.hide = true
       }

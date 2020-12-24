@@ -1,19 +1,24 @@
 <template>
   <div id="develop-home">
     <a-row id="develop-home-welcome">
-      <a-col :span="24">
+      <a-col :span="19">
         <a-avatar shape="square" :size="64" :src="this.path+this.id" style="margin-bottom: 15px;position: absolute;" />
         <h1 style="color: white;margin-left: 80px;margin-bottom: 20px;padding-top: 20px;">Welcome! {{this.name}}</h1>
         <span>Email: {{ this.email }}</span>
         <br />
         <span>Account Balance: {{this.balance}}</span>
       </a-col>
+      <a-col :span="5">
+        <a-button ghost type="dashed"  @click="$router.push({path: '/user_edit', query: {role: 'd'}})" style="margin-top: 40px">
+          Edit your profile and Top Up
+        </a-button>
+      </a-col>
     </a-row>
     <a-divider class="develop-home-divider" />
     <a-row id="develop-home-app">
       <a-col :span="18" id="develop-home-app-left">
         <h1 style="color: aliceblue">My games</h1>
-        <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail', query: {id: '-1',user_id: user_id}})" style="display: inline;margin-bottom: 10px">
+        <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail', query: {id: '-1',user: user_id}})" style="display: inline;margin-bottom: 10px">
           Create a new game
         </a-button>
         <a-table
@@ -24,14 +29,14 @@
           rowKey="id"
         >
             <span slot="operation" slot-scope="text, record">
-            <router-link :to="{path: '/developer_detail', query:{ id:record.id, user_id: user_id}}">View Detail</router-link>
+            <router-link :to="{path: '/developer_detail', query:{ id:record.id, user: user_id}}">View Detail</router-link>
           </span>
         </a-table>
       </a-col>
       <a-col :span="6" id="develop-home-app-right">
         <a-row style="background: rgba(8,25,37,0.95);padding-bottom: 15px">
           <h1 style="background: rgba(229,234,71,0.95);">GameCenter SDK v1.0</h1>
-          <a-button type="primary" ghost>
+          <a-button type="primary" ghost @click="handleSDKDownload">
             Download latest SDK
           </a-button>
           <a-divider class="develop-home-divider"/>
@@ -90,17 +95,20 @@ export default {
       id: null,
       gameList: [],
       glist: [],
+      user: null,
       balance: null
     }
   },
   created () {
+    this.user = this.user_id
+    console.log('ID', this.user_id)
     this.getUserInfo()
   },
   methods: {
     async getUserInfo () {
       const result = await this.$http.get('/api/user/info')
-      const res = await this.$http.get('/api/developer/game')
-      console.log(res)
+      const res = await this.$http.get('/api/developer/games')
+      // console.log(result.data.data)
       if (result.status !== 200 || result.data.code !== 0) {
         return this.$message.error(result.data.msg)
       }
@@ -143,6 +151,11 @@ export default {
         })
       }
       // console.log(this.gameList)
+    },
+    async handleSDKDownload () {
+      window.location.href = 'http://47.115.50.249/api/developer/sdk/download'
+      // const result = await this.$http.get('/api/developer/sdk/download')
+      // console.log(result)
     }
   }
 }

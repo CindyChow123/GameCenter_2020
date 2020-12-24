@@ -12,7 +12,7 @@
       </a-col>
       <a-col :span="6">
         <h1 style="color: white;">Level 0</h1>
-        <a-button ghost type="dashed"  @click="$router.push('/user_edit')">
+        <a-button ghost type="dashed"  @click="$router.push({path:'/user_edit',query: {role: 'p'}})">
           Edit your profile and Top Up
         </a-button>
       </a-col>
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async getUserInfo () {
-      // console.log(this.user_id)
+      console.log('ID:', this.user_id)
       const result = await this.$http.get('/api/user/info')
       if (result.status !== 200 || result.data.code !== 0) {
         return this.$message.error(result.data.msg)
