@@ -78,20 +78,37 @@
                 {{profile.is_locked}}
               </a-descriptions-item>
             </a-descriptions>
-            <a-button type="primary" style="margin-top: 10px" @click="changeStatus">
-              ChangeLockStatus
-            </a-button>
-            <a-radio-group :value="current_role" @change="handleRoleChange" style="margin-left: 10px">
-              <a-radio-button value="a">
-                Admin
-              </a-radio-button>
-              <a-radio-button value="d">
-                Developer
-              </a-radio-button>
-              <a-radio-button value="p">
-                Player
-              </a-radio-button>
-            </a-radio-group>
+            <br />
+            <a-form-model :model="changeForm" style="border-color:cadetblue;border-style: dashed;border-radius: 25px">
+              <a-form-model-item label="Lock Status" style="margin-left: 15px">
+                <a-radio-group v-model="changeForm.lock_status">
+                  <a-radio value="0">
+                    false
+                  </a-radio>
+                  <a-radio value="1">
+                    ture
+                  </a-radio>
+                </a-radio-group>
+              </a-form-model-item>
+              <a-form-model-item label="Activity type" style="margin-left: 15px">
+                <a-checkbox-group v-model="changeForm.role_status">
+                  <a-checkbox value="p" name="play">
+                    player
+                  </a-checkbox>
+                  <a-checkbox value="d" name="develop">
+                    developer
+                  </a-checkbox>
+                  <a-checkbox value="a" name="admin">
+                    admin
+                  </a-checkbox>
+                </a-checkbox-group>
+              </a-form-model-item>
+              <a-form-model-item style="margin-left: 400px">
+                <a-button type="primary" @click="changeAccount">
+                  Change
+                </a-button>
+              </a-form-model-item>
+            </a-form-model>
           </a-tab-pane>
           <a-tab-pane key="3" tab="Upload Documents">
             <div>
@@ -200,7 +217,11 @@ export default {
       report_detail: [],
       cols,
       report_id: 0,
-      lock_next: ''
+      lock_next: '',
+      changeForm: {
+        lock_status: '',
+        role_status: []
+      }
     }
   },
   created () {
@@ -261,71 +282,11 @@ export default {
             this.profile.is_online = response.data.data.online.toString()
             this.profile.created_at = response.data.data.createdAt.toString()
             this.profile.is_locked = response.data.data.locked.toString()
+            this.changeForm.lock_status = this.profile.is_locked
+            this.changeForm.role_status = this.profile.role.split()
           } else {
             // this.$message.error('Error!')
             this.$message.error(response.data.msg)
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-    async changeStatus () {
-      if (this.profile.is_locked === 'true') {
-        this.lock_next = 'false'
-      } else {
-        this.lock_next = 'true'
-      }
-      var obji = {
-        user_id: Number(this.profile.user_id),
-        user_email: this.profile.user_email,
-        user_name: this.profile.user_name,
-        lock: this.lock_next
-      }
-      obji = qs.stringify(obji)
-      await this.$http.post('/api/admin/user/account/lock', obji)
-        .then((response) => {
-          // if (response.status === 200 && response.code === 0) {
-          //   this.$message.success('Create successfully')
-          // } else {
-          //   this.$message.error('Error!')
-          // }
-          if (response.status === 200 && response.data.code === 0) {
-            // if (this.profile.is_locked === 'true') {
-            //   this.profile.is_locked = 'false'
-            // } else {
-            //   this.profile.is_locked = 'true'
-            // }
-            this.$message.success('Success!')
-          } else {
-            this.$message.error('Error!')
-          }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      this.profile.is_locked = this.lock_next
-    },
-    handleRoleChange (e) {
-      this.$http.post('/api/admin/user/assign', {
-        params: {
-          admin_id: 1,
-          user_id: this.profile.user_id,
-          role: e.target.value
-        }
-      })
-        .then((response) => {
-          // if (response.status === 200 && response.code === 0) {
-          //   this.$message.success('Create successfully')
-          // } else {
-          //   this.$message.error('Error!')
-          // }
-          if (response.status === 200) {
-            if (this.profile.role !== e.target.value) {
-              this.profile.role = e.target.value
-            }
-          } else {
-            this.$message.error('Error!')
           }
         })
         .catch((error) => {
@@ -401,6 +362,58 @@ export default {
           // }
           if (response.status === 200 && response.code === 0) {
             this.$message.success('Delete successfully')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    changeAccount () {
+      console.log('role change', this.changeForm.role_status)
+      this.$http.post('/api/admin/user/assign', {
+        params: {
+          admin_id: 1,
+          user_id: this.profile.user_id,
+          role: this.changeForm.role_status.join('')
+        }
+      })
+        .then((response) => {
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200) {
+            this.$message.success('Change role successfully')
+          } else {
+            this.$message.error('Error!')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      var obji = {
+        user_id: Number(this.profile.user_id),
+        user_email: this.profile.user_email,
+        user_name: this.profile.user_name,
+        lock: this.changeForm.lock_status
+      }
+      this.$http.post('/api/admin/user/account/lock', obji)
+        .then((response) => {
+          // if (response.status === 200 && response.code === 0) {
+          //   this.$message.success('Create successfully')
+          // } else {
+          //   this.$message.error('Error!')
+          // }
+          if (response.status === 200 && response.data.code === 0) {
+            // if (this.profile.is_locked === 'true') {
+            //   this.profile.is_locked = 'false'
+            // } else {
+            //   this.profile.is_locked = 'true'
+            // }
+            this.$message.success('Change lock status!')
+          } else {
+            this.$message.error('Error!')
           }
         })
         .catch((error) => {

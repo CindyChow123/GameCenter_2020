@@ -69,7 +69,7 @@
           </a-menu>
         </a-layout-header>
         <a-layout-content style="background: black">
-          <router-view @getLoginFlag="getLoginFlag" @getUserId="getUserId" :user_id="this.user_id"/>
+          <router-view @getLoginFlag="getLoginFlag" @getUserId="getUserId" :user_id="user_id"/>
         </a-layout-content>
         <a-layout-footer style="background: black;color: deepskyblue;text-align: center">
           We design ©2020 Created by Us
@@ -82,6 +82,11 @@
 
 export default {
   name: 'app',
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
   data () {
     return {
       selectedKeys_head: ['1'],
@@ -89,7 +94,8 @@ export default {
       loginFlagPlayer: false,
       loginFlagDeveloper: false,
       loginFlagAdmin: false,
-      user_id: null
+      user_id: null,
+      isRouterAlive: true
     }
   },
   created () {
@@ -123,6 +129,12 @@ export default {
       this.loginFlagDeveloper = false
       this.loginFlagAdmin = false
       this.loginFlag = false
+    },
+    reload () {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
     }
   }
 }
