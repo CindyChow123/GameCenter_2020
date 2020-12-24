@@ -224,7 +224,7 @@ export default {
       this.modal_visible = false
     },
     checkPrice (rule, value, callback) {
-      if (this.form.price > 0) {
+      if (this.form.price >= 0) {
         callback()
         return
       }

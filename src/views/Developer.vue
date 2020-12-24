@@ -9,7 +9,7 @@
         <span>Account Balance: {{this.balance}}</span>
       </a-col>
       <a-col :span="5">
-        <a-button ghost type="dashed"  @click="$router.push({path: '/user_edit', query: {role: 'd'}})" style="margin-top: 40px">
+        <a-button ghost type="dashed"  @click="$router.push({path: '/user_edit', query: {role: 'd', user: user}})" style="margin-top: 40px">
           Edit your profile and Top Up
         </a-button>
       </a-col>
@@ -18,7 +18,7 @@
     <a-row id="develop-home-app">
       <a-col :span="18" id="develop-home-app-left">
         <h1 style="color: aliceblue">My games</h1>
-        <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail', query: {id: '-1',user: user_id}})" style="display: inline;margin-bottom: 10px">
+        <a-button ghost type="dashed"  @click="$router.push({path: '/developer_detail', query: {id: '-1',user: user}})" style="display: inline;margin-bottom: 10px">
           Create a new game
         </a-button>
         <a-table
@@ -29,7 +29,7 @@
           rowKey="id"
         >
             <span slot="operation" slot-scope="text, record">
-            <router-link :to="{path: '/developer_detail', query:{ id:record.id, user: user_id}}">View Detail</router-link>
+            <router-link :to="{path: '/developer_detail', query:{ id:record.id, user: user}}">View Detail</router-link>
           </span>
         </a-table>
       </a-col>
@@ -100,8 +100,8 @@ export default {
     }
   },
   created () {
-    this.user = this.user_id
-    console.log('ID', this.user_id)
+    this.user = this.$route.params.uid
+    console.log('ID', this.user)
     this.getUserInfo()
   },
   methods: {

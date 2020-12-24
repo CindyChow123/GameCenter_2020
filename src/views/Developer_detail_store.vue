@@ -177,9 +177,9 @@ export default {
         release_date: null,
         developerId: null,
         tag: '',
-        discount_start: '',
-        discount_end: '',
-        discount_rate: null,
+        discount_start: moment().startOf('day').format('YYYY-MM-DD'),
+        discount_end: moment().startOf('day').format('YYYY-MM-DD'),
+        discount_rate: 1,
         branch: ''
       },
       rules: {
@@ -203,8 +203,8 @@ export default {
           }
         ]
       },
-      tags: ['Racing', 'Sports', 'Action', 'Adventure', 'Casual'],
-      tag: 'common',
+      tags: ['Racing', 'Sports', 'Action', 'Adventure', 'Casual', 'Common'],
+      tag: 'Common',
       inputVisible: false,
       inputValue: '',
       header: {
@@ -254,7 +254,7 @@ export default {
       })
     },
     checkPrice (rule, value, callback) {
-      if (this.form.price > 0) {
+      if (this.form.price >= 0) {
         callback()
         return
       }

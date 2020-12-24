@@ -70,14 +70,14 @@
         <div v-for="(game, index) in games" :key="index">
           <a-col :span="6">
             <router-link :to="`/single_game/${game.id}`">
-              <a-card hoverable style="width: 200px;margin-top:20px;margin-left: 20px">
+              <a-card hoverable style="width: 200px;margin-top:20px;margin-left: 20px;">
                 <img
                   slot="cover"
                   alt="example"
                   :src="urls[index]"
                   height="100" width="100"
                 />
-              <a-card-meta :title="game.name" description="xxxxxxxx">
+              <a-card-meta :title="game.name" :description="game.description">
               </a-card-meta>
               </a-card>
             </router-link>

@@ -12,7 +12,7 @@
       </a-col>
       <a-col :span="6">
         <h1 style="color: white;">Level 0</h1>
-        <a-button ghost type="dashed"  @click="$router.push({path:'/user_edit',query: {role: 'p'}})">
+        <a-button ghost type="dashed"  @click="$router.push({path:'/user_edit',query: {role: 'p', 'user': uid}})">
           Edit your profile and Top Up
         </a-button>
       </a-col>
@@ -42,11 +42,11 @@
       <a-col :span="8" class="page_content_right">
         <h1 style="color: white">Others</h1>
         <br />
-        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push({path: '/user_games', query: {user: user_id}})">
+        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push({path: '/user_games', query: {user: uid}})">
           My Games
         </a-button>
         <br />
-        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push({path: '/user_collections', query: {user: user_id}})">
+        <a-button type="primary" style="margin-bottom: 15px;" @click="$router.push({path: '/user_collections', query: {user: uid}})">
           My collections
         </a-button>
 <!--        <br />-->
@@ -90,15 +90,17 @@ export default {
       email: '',
       path: 'http://47.115.50.249/api/user/avatar/',
       bio: '',
-      balance: null
+      balance: null,
+      uid: null
     }
   },
   created () {
+    this.uid = this.$route.params.uid
     this.getUserInfo()
   },
   methods: {
     async getUserInfo () {
-      console.log('ID:', this.user_id)
+      console.log('ID:', this.uid)
       const result = await this.$http.get('/api/user/info')
       if (result.status !== 200 || result.data.code !== 0) {
         return this.$message.error(result.data.msg)

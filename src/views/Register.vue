@@ -267,7 +267,7 @@ export default {
       objc = qs.stringify(objc)
       this.$http.post('/api/user/register/confirm', objc)
         .then((response) => {
-          if (response.status === 200 && response.code === 0) {
+          if (response.status === 200 && response.data.code === 0) {
             this.$message.success('Activate successfully')
           } else {
             // that.$message.error('Error!')
@@ -277,6 +277,7 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      this.visible = false
     },
     reSend () {
       var objc = {
@@ -285,7 +286,7 @@ export default {
       objc = qs.stringify(objc)
       this.$http.post('/api/user/register/resend', objc)
         .then((response) => {
-          if (response.status === 200 && response.code === 0) {
+          if (response.status === 200 && response.data.code === 0) {
             this.$message.success('Activate successfully')
           } else {
             // that.$message.error('Error!')

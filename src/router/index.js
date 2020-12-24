@@ -29,7 +29,7 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/user',
+    path: '/user/:uid',
     name: 'User',
     component: () => import('../views/User.vue')
   },
@@ -90,7 +90,7 @@ const routes = [
     ]
   },
   {
-    path: '/developer',
+    path: '/developer/:uid',
     name: 'Developer',
     component: () => import('../views/Developer')
   },

@@ -122,6 +122,7 @@
                 :headers="headers"
                 @change="handleChange"
                 style="margin-left:20px;margin-top: 100px"
+                :file-list="fileList"
               >
                 <a-button> <a-icon type="upload" /> Click to Upload </a-button>
               </a-upload>
@@ -135,8 +136,9 @@
                 :multiple="true"
                 action="http://47.115.50.249/api/admin/manual"
                 :headers="headers"
-                @change="handleChange"
+                @change="handleChange1"
                 style="margin-left:20px;margin-top: 100px"
+                :file-list="fileList1"
               >
                 <a-button> <a-icon type="upload" /> Click to Upload </a-button>
               </a-upload>
@@ -189,6 +191,8 @@ export default {
   name: 'Admin',
   data () {
     return {
+      fileList: [],
+      fileList1: [],
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
       form: {
@@ -294,6 +298,49 @@ export default {
         })
     },
     handleChange (info) {
+      let fileList = [...info.fileList]
+
+      // 1. Limit the number of uploaded files
+      //    Only to show two recent uploaded files, and old ones will be replaced by the new
+      fileList = fileList.slice(-1)
+
+      // 2. read from response and show file link
+      fileList = fileList.map(file => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.url
+        }
+        return file
+      })
+
+      this.fileList = fileList
+      console.log('FL:', this.fileList)
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} file uploaded successfully`)
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`)
+      }
+    },
+    handleChange1 (info) {
+      let fileList1 = [...info.fileList]
+
+      // 1. Limit the number of uploaded files
+      //    Only to show two recent uploaded files, and old ones will be replaced by the new
+      fileList1 = fileList1.slice(-1)
+
+      // 2. read from response and show file link
+      fileList1 = fileList1.map(file => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.url
+        }
+        return file
+      })
+      this.fileList1 = fileList1
+      console.log('FL:', this.fileList1)
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
       }
@@ -360,7 +407,7 @@ export default {
           // } else {
           //   this.$message.error('Error!')
           // }
-          if (response.status === 200 && response.code === 0) {
+          if (response.status === 200 && response.data.code === 0) {
             this.$message.success('Delete successfully')
           }
         })

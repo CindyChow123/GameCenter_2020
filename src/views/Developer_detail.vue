@@ -2,7 +2,7 @@
 <!--  <div style="color: white">{{$route.query.id}}</div>-->
   <div>
     <a-breadcrumb style="margin-left: 20px;margin-top: 20px">
-      <a-breadcrumb-item><router-link to="/developer">Dashboard</router-link></a-breadcrumb-item>
+      <a-breadcrumb-item><router-link :to="`/developer/${uid}`">Dashboard</router-link></a-breadcrumb-item>
       <a-breadcrumb-item>Detail</a-breadcrumb-item>
     </a-breadcrumb>
     <div class="page">
@@ -14,18 +14,18 @@
           style="height: 100%"
         >
           <a-menu-item key="1" >
-            <router-link :to="{path: '/developer_detail_store', query: {id:this.id,user_id:this.user_id}}">
+            <router-link :to="{path: '/developer_detail_store', query: {id:this.id,user_id:uid}}">
               <a-icon type="menu" style="display: inline"/><span>Edit Store Page</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="2" :disabled="this.hide">
-            <router-link :to="{path: '/developer_detail_package', query: {id:this.id,user_id:this.user_id}}">
+            <router-link :to="{path: '/developer_detail_package', query: {id:this.id,user_id:uid}}">
               <a-icon type="smile" style="display:inline" />
               <span>Upload Game package</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="3" :disabled="this.hide">
-            <router-link :to="{path: '/developer_detail_dlc', query: {id:this.id,user_id:this.user_id}}">
+            <router-link :to="{path: '/developer_detail_dlc', query: {id:this.id,user_id:uid}}">
               <a-icon type="smile" style="display:inline" />
               <span>Create Downloadable Content</span>
             </router-link>
@@ -43,7 +43,7 @@ export default {
   data () {
     return {
       id: null,
-      user_id: null,
+      uid: null,
       hide: false
     }
   },
@@ -53,7 +53,7 @@ export default {
   methods: {
     getId () {
       this.id = this.$route.query.id
-      this.user_id = this.$route.query.user
+      this.uid = this.$route.query.user
       console.log('my id', this.user_id)
       if (this.id === '-1') {
         this.hide = true

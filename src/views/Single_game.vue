@@ -19,7 +19,7 @@
         </a-col>
       </div>
     </a-row>
-    <a-row type="flex" justify="center">
+    <a-row type="flex" justify="center" style="padding-left: 80px">
       <a-col :span="6">
         <strong style="font-size: 16px; color: darkorange">Release date</strong>
         <p>{{ this.game.release_date }}</p>
@@ -36,7 +36,7 @@
         <p>{{this.game.branch}}</p>
       </a-col>
     </a-row>
-    <a-row type="flex" justify="center">
+    <a-row type="flex" justify="center" style="padding-left: 80px">
       <a-col :span="12">
         <strong style="font-size: 16px; color: darkorange">Description</strong>
         <p>
@@ -52,10 +52,10 @@
       Download
     </a-button>
     <br/>
-    <a-list v-if="dlc.length > 0" item-layout="horizontal" :data-source="dlc_name" al>
+    <a-list v-if="dlc.length > 0" item-layout="horizontal" :data-source="dlc_name" al style="margin-left: 420px">
       <strong style="font-size: 25px; margin-left: 300px; color: white">DLC</strong>
       <br/>
-      <div v-for="(d, index) in dlc" :key="index" style="margin-left: 300px">
+      <div v-for="(d, index) in dlc" :key="index">
         <a-list-item
           style="border-style:dashed;border-color:cadetblue;margin-top:10px;border-radius: 25px;width:600px;">
           <a-icon type="smile" theme="twoTone" style="margin-left: 15px;margin-right: 5px"/>
@@ -73,9 +73,9 @@
       </div>
     </a-list>
     <br/>
-    <strong style="font-size: 25px; margin-left: 300px">Comments</strong>
+    <strong style="font-size: 25px; margin-left: 420px">Comments</strong>
     <br/>
-    <div style="margin-left: 300px; margin-top: 20px; width: 600px">
+    <div style="margin-left: 420px; margin-top: 20px; width: 600px">
       <a-list
         v-if="comments.length > 0"
         :data-source="comments"

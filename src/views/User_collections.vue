@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-breadcrumb style="margin-left: 20px;margin-top: 20px">
-      <a-breadcrumb-item><router-link to="/user">Userspace</router-link></a-breadcrumb-item>
+      <a-breadcrumb-item><router-link :to="`/user/${uid}`">Userspace</router-link></a-breadcrumb-item>
       <a-breadcrumb-item>Collections</a-breadcrumb-item>
     </a-breadcrumb>
     <div class="page">
@@ -13,17 +13,17 @@
           style="height: 100%"
         >
           <a-menu-item key="1">
-            <router-link :to="{path: '/user_collections_comments', query: {user:user_id}}">
+            <router-link :to="{path: '/user_collections_comments', query: {user:uid}}">
               <a-icon type="message" style="display: inline"/><span>My Comments</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="2">
-            <router-link :to="{path: '/user_collections_shots', query: {user:user_id, type:'picture'}}">
+            <router-link :to="{path: '/user_collections_shots', query: {user:uid, type:'picture'}}">
               <a-icon type="camera" style="display: inline"/><span>My Screenshots</span>
             </router-link>
           </a-menu-item>
           <a-menu-item key="3">
-            <router-link :to="{path: '/user_collections_shots', query: {user:user_id, type:'video'}}">
+            <router-link :to="{path: '/user_collections_shots', query: {user:uid, type:'video'}}">
               <a-icon type="play-square" style="display: inline"/><span>My Videos</span>
             </router-link>
           </a-menu-item>
@@ -39,11 +39,12 @@
 export default {
   data () {
     return {
-      user_id: null
+      uid: null
     }
   },
   created () {
-    this.user_id = this.$route.query.user
+    this.uid = this.$route.query.user
+    console.log('uid:', this.uid)
   }
 }
 </script>

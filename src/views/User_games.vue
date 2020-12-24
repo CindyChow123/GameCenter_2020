@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-breadcrumb style="margin-left: 20px;margin-top: 20px">
-      <a-breadcrumb-item><router-link to="/user">Userspace</router-link></a-breadcrumb-item>
+      <a-breadcrumb-item><router-link :to="`/user/${uid}`">Userspace</router-link></a-breadcrumb-item>
       <a-breadcrumb-item>Games</a-breadcrumb-item>
     </a-breadcrumb>
     <div class="page">
@@ -67,11 +67,13 @@ export default {
       gameList: [],
       friTags: [],
       friTag: 'Please select a friend',
-      menuList: null
+      menuList: null,
+      uid: null
     }
   },
   created () {
     // console.log(this.$route.query.user)
+    this.uid = this.$route.query.user
     this.getGameInfo(this.tag)
     this.getTag()
     this.getFriend()

@@ -31,7 +31,7 @@
           </a-input>
         </a-form-model-item>
         <a-form-model-item>
-          <a-checkbox @change="handleRem">
+          <a-checkbox @change="handleRem" class="ant-checkbox-wrapper">
             Remember me
           </a-checkbox>
           <a class="login-form-forgot" href="">
@@ -225,6 +225,9 @@ export default {
 }
 .login-form-button {
   width: 100%;
+}
+.ant-checkbox-wrapper {
+  color: gray;
 }
 </style>
 <!--<script>-->

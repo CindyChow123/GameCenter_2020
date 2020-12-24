@@ -18,9 +18,9 @@
             <a-menu-item key="2">
               <router-link to="/support">Support</router-link>
             </a-menu-item>
-            <a-button type="dashed" ghost>
-              Install GC
-            </a-button>
+<!--            <a-button type="dashed" ghost>-->
+<!--              Download User Manual-->
+<!--            </a-button>-->
             <a-dropdown placement="bottomCenter" v-if="loginFlag">
               <a class="login-dropdown" @click="e => e.preventDefault()">
                 UserSpace
@@ -28,13 +28,13 @@
               <template v-slot:overlay>
                 <a-menu @click="handleLogin">
                   <a-menu-item key="1" v-if="loginFlagPlayer">
-                    <router-link :to="{path:'/user'}">User space</router-link>
+                    <router-link :to="`/user/${user_id}`">User space</router-link>
                   </a-menu-item>
                   <a-menu-item key="12" v-if="loginFlagAdmin">
-                    <router-link :to="{path:'/admin'}" >My space</router-link>
+                    <router-link :to="'/admin'" >My space</router-link>
                   </a-menu-item>
                   <a-menu-item key="13" v-if="loginFlagDeveloper">
-                    <router-link :to="{path:'/developer', query:{user: user_id}}">Developer space</router-link>
+                    <router-link :to="`/developer/${user_id}`">Developer space</router-link>
                   </a-menu-item>
                   <a-menu-item key="2" @click="handleLogout">
                     <router-link to="/store">Log out</router-link>
