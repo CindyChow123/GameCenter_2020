@@ -9,6 +9,9 @@
           :label-col="labelCol"
           :wrapper-col="wrapperCol"
           style="padding:20px;margin-left: 80px;margin-top: 60px; width: 400px;height:400px">
+          <a-form-model-item>
+            <strong style="font-size: 25px; color: cadetblue; margin-left: 40px">Register Now</strong>
+          </a-form-model-item>
           <a-form-model-item label="Name">
             <a-input
               v-model="form.name"
@@ -83,7 +86,7 @@
         <div><img
           src="https://www.sustech.edu.cn/wp-content/themes/twentyseventeen/images/sustech-logo-cn.png"
           alt="Game Pic"
-          style="margin-left: 200px"
+          style="margin-left: 10px; margin-top: 150px; width: 600px"
         >
         </div>
       </a-col>
