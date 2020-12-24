@@ -1,20 +1,30 @@
 <template>
   <div>
     <div style="margin: auto; text-align: center;">
-      <a-carousel style="width: 450px; display: inline-block;" arrows autoplay>
+      <a-carousel style="width: 450px; display: inline-block;margin-top:20px" arrows autoplay>
         <div slot="prevArrow" class="custom-slick-arrow" style="left: 10px; zIndex: 1">
           <a-icon type="left-circle" />
         </div>
         <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
           <a-icon type="right-circle" />
         </div>
-        <div><img src="header1.png" alt="Game Pic"></div>
-        <div><img src="header2.jpg" alt="Game Pic"></div>
-        <div><img src="header1.png" alt="Game Pic"></div>
-        <div><img src="header2.jpg" alt="Game Pic"></div>
+        <div><img src="http://47.115.50.249/game/getPhoto/1608809249899mingfeng.jpg" alt="Game Pic" style="width: 450px"></div>
+        <div><img src="http://47.115.50.249/game/getPhoto/1608788599504QQ图片20201224134309.png" alt="Game Pic" style="width: 450px"></div>
+        <div><img src="http://47.115.50.249/game/getPhoto/1608812275275M2MMO89.png" alt="Game Pic" style="width: 450px"></div>
+        <div><img src="http://47.115.50.249/game/getPhoto/1608811579924BingWallpaper-2018-12-10.jpg" alt="Game Pic" style="width: 450px"></div>
       </a-carousel>
     </div>
-    <a-input-search placeholder="search the game" style="width: 200px; margin-left: 900px; margin-top: 10px" @search="onSearch" />
+    <a-input-group :compact="true" style="width:300px; margin-left:850px; margin-top:20px">
+      <a-select v-model="search_kind" style="width: 30%">
+        <a-select-option value="game">
+          Game
+        </a-select-option>
+        <a-select-option value="user">
+          User
+        </a-select-option>
+      </a-select>
+      <a-input-search style="width:70%" placeholder="search the game or user" @search="onSearch" />
+    </a-input-group>
     <br />
     <a-button type="primary" size="large" style="margin-bottom: 16px" @click="toggleCollapsed">
       <a-icon :type="collapsed ? 'right-circle' : 'left-circle'" />
@@ -92,9 +102,9 @@
       <br />
       <a-pagination
         :default-current="1"
-        :total="90"
+        :total="total_pages"
         :defaultPageSize="9"
-        style="margin-left: 700px; margin-top: 50px"
+        style="margin-left: 900px"
         @change="onChange"
       />
   </div>
@@ -117,7 +127,10 @@ export default {
       games: [],
       urls: {},
       target_game: {},
-      search_game: ''
+      search_game: '',
+      total_pages: 1,
+      search_kind: 'game',
+      search_user: {}
     }
   },
   mounted () {
@@ -138,28 +151,49 @@ export default {
     // onChange (a, b, c) {
     //   console.log(a, b, c)
     // },
-    onSearch (value) {
-      this.$http.get('/game/list', {
-        params: {
-          tag: '',
-          name: value,
-          page: this.current - 1
-        }
-      })
-        .then((response) => {
-          if (response.status === 200 && response.data.code === 0) {
-            this.games = response.data.data.content
-            for (let i = 0; i < this.games.length; i++) {
-              this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
-            }
-          } else {
-            // this.$message.error('Error!')
-            this.$message.error(response.data.msg)
+    async onSearch (value) {
+      if (this.search_kind === 'game') {
+        this.$http.get('/game/list', {
+          params: {
+            tag: '',
+            name: value,
+            page: this.current - 1
           }
         })
-        .catch((error) => {
-          console.log(error)
+          .then((response) => {
+            if (response.status === 200 && response.data.code === 0) {
+              this.games = response.data.data.content
+              for (let i = 0; i < this.games.length; i++) {
+                this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
+              }
+            } else {
+              // this.$message.error('Error!')
+              this.$message.error(response.data.msg)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      } else if (this.search_kind === 'user') {
+        await this.$http.get('/api/user/find', {
+          params: {
+            name: value
+          }
         })
+          .then((response) => {
+            if (response.status === 200 && response.data.code === 0) {
+              console.log('search_user_id', response.data.data)
+              this.search_user = response.data.data
+            } else {
+              // this.$message.error('Error!')
+              this.$message.error(response.data.msg)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        this.$router.push({ path: '/user_view', query: { id: this.search_user.id, unfriend: false } })
+      }
     },
     handleClick (e) {
       this.menu_key[0] = e.key
@@ -183,7 +217,9 @@ export default {
       })
         .then((response) => {
           if (response.status === 200 && response.data.code === 0) {
+            console.log('game list', response.data)
             this.games = response.data.data.content
+            this.total_pages = response.data.data.totalPages
             console.log('games', this.games)
             for (let i = 0; i < this.games.length; i++) {
               this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
@@ -196,6 +232,7 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      console.log('urls', this.urls)
     }
   }
 }

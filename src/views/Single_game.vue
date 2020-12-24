@@ -32,6 +32,8 @@
         <br/>
         <strong style="font-size: 16px; color: darkorange">Discount </strong>
         <p>{{ this.game.discount_rate }} from {{ this.game.discount_start }} to {{ this.game.discount_end }}</p>
+        <strong style="font-size: 16px; color: darkorange">Branch</strong>
+        <p>{{this.game.branch}}</p>
       </a-col>
     </a-row>
     <a-row type="flex" justify="center">
