@@ -82,11 +82,11 @@
             <a-form-model :model="changeForm" style="border-color:cadetblue;border-style: dashed;border-radius: 25px">
               <a-form-model-item label="Lock Status" style="margin-left: 15px">
                 <a-radio-group v-model="changeForm.lock_status">
-                  <a-radio value="0">
+                  <a-radio value="false">
                     false
                   </a-radio>
-                  <a-radio value="1">
-                    ture
+                  <a-radio value="true">
+                    true
                   </a-radio>
                 </a-radio-group>
               </a-form-model-item>
@@ -370,19 +370,20 @@ export default {
     },
     changeAccount () {
       console.log('role change', this.changeForm.role_status)
-      this.$http.post('/api/admin/user/assign', {
-        params: {
-          admin_id: 1,
-          user_id: this.profile.user_id,
-          role: this.changeForm.role_status.join('')
-        }
-      })
+      var objj = {
+        admin_id: 1,
+        user_id: Number(this.profile.user_id),
+        role: this.changeForm.role_status.join('')
+      }
+      objj = qs.stringify(objj)
+      this.$http.post('/api/admin/user/assign', objj)
         .then((response) => {
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
           //   this.$message.error('Error!')
           // }
+          console.log('role change response', response)
           if (response.status === 200) {
             this.$message.success('Change role successfully')
           } else {
@@ -392,12 +393,19 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+      var lockNext = true
+      if (this.changeForm.lock_status === 'false') {
+        lockNext = false
+      } else {
+        lockNext = true
+      }
       var obji = {
         user_id: Number(this.profile.user_id),
         user_email: this.profile.user_email,
         user_name: this.profile.user_name,
-        lock: this.changeForm.lock_status
+        lock: lockNext
       }
+      obji = qs.stringify(obji)
       this.$http.post('/api/admin/user/account/lock', obji)
         .then((response) => {
           // if (response.status === 200 && response.code === 0) {
@@ -405,6 +413,7 @@ export default {
           // } else {
           //   this.$message.error('Error!')
           // }
+          console.log('lock change response', response)
           if (response.status === 200 && response.data.code === 0) {
             // if (this.profile.is_locked === 'true') {
             //   this.profile.is_locked = 'false'
