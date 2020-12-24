@@ -208,7 +208,6 @@ export default {
                 numPic = numPic + 1
               }
             }
-            this.$message.success('Query game info successfully')
           } else {
             // this.$message.error('Error!')
             // this.$message.error(response.data.msg)
@@ -275,7 +274,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Query successfully')
             this.game_status = response.data.data
             // this.profile = response.data.data
           } else {
@@ -323,9 +321,7 @@ export default {
       await this.$http.get('/comment/GID/' + this.game.id)
         .then((response) => {
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Query comments successfully')
             this.comments = response.data.data
-            console.log('display comments', this.comments)
           } else {
             // this.$message.error('Error!')
             this.$message.error(response.data.msg)
@@ -335,26 +331,24 @@ export default {
           console.log(error)
         })
       if (this.comments.length > 0) {
-        for (var i = 0;i < this.comments.length;i++){
+        for (var i = 0; i < this.comments.length; i++) {
           this.comment_userAvatar[i] = 'http://47.115.50.249/api/user/avatar/' + this.comments[i].user_id
-          this.$http.get('/api/user/avatar/' + this.comments[i].user_id)
-          .then((response) => {
-            console.log('Query avatar back', typeof(response.data))
-            if (response.status === 200 && response.data.code === 0) {
-              this.$message.success('Query avatar successfully')
-            } else {
-              // this.$message.error('Error!')
-              this.$message.error(response.data.msg)
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+          // this.$http.get('/api/user/avatar/' + this.comments[i].user_id)
+          //   .then((response) => {
+          //     if (response.status === 200 && response.data.code === 0) {
+          //       this.$message.success('Query avatar successfully')
+          //     } else {
+          //       // this.$message.error('Error!')
+          //       this.$message.error(response.data.msg)
+          //     }
+          //   })
+          //   .catch((error) => {
+          //     console.log(error)
+          //   })
         }
       }
     },
     submitComments () {
-      console.log('transmit score', this.commentForm.score_comment)
       var obji = {
         UID: this.user_id,
         GID: this.game.id,
@@ -380,9 +374,7 @@ export default {
       this.$http.get('/comment/GID/' + this.game.id)
         .then((response) => {
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Query comments successfully')
             this.comments = response.data.data
-            console.log('display comments', this.comments)
           } else {
             // this.$message.error('Error!')
             this.$message.error(response.data.msg)
@@ -400,7 +392,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('get DLC successfully')
             this.dlc = response.data.data
             if (this.dlc.length > 0) {
               for (var i = 0; i < this.dlc.length; i++) {

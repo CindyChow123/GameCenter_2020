@@ -37,9 +37,6 @@
                 <a-button type="primary" @click="onSubmit" style="margin-left: 200px">
                   Create
                 </a-button>
-                <a-button style="margin-left: 2px" @click="resetForm">
-                  Cancel
-                </a-button>
               </a-form-model-item>
             </a-form-model>
           </a-tab-pane>
@@ -213,7 +210,6 @@ export default {
       console.log(key)
     },
     onSubmit () {
-      console.log('submit!', this.form)
       var obji = {
         user_email: this.form.email,
         user_name: this.form.name,
@@ -223,7 +219,6 @@ export default {
       obji = qs.stringify(obji)
       this.$http.post('/api/admin/user/create', obji)
         .then((response) => {
-          console.log(response)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
@@ -253,9 +248,7 @@ export default {
         }
       })
         .then((response) => {
-          console.log(response.data.data)
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Query successfully')
             // this.profile = response.data.data
             this.profile.user_id = response.data.data.id.toString()
             this.profile.name = response.data.data.name
@@ -286,14 +279,12 @@ export default {
       obji = qs.stringify(obji)
       this.$http.post('/api/admin/user/account/lock', obji)
         .then((response) => {
-          console.log(response.data)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
           //   this.$message.error('Error!')
           // }
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('Change successfully')
             if (this.profile.is_locked === 'ture') {
               this.profile.is_locked = 'false'
             } else {
@@ -316,7 +307,6 @@ export default {
         }
       })
         .then((response) => {
-          console.log(response)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
@@ -324,7 +314,6 @@ export default {
           // }
           if (response.status === 200) {
             if (this.profile.role !== e.target.value) {
-              this.$message.success('Change successfully')
               this.profile.role = e.target.value
             }
           } else {
@@ -334,10 +323,6 @@ export default {
         .catch((error) => {
           console.log(error)
         })
-    },
-    resetForm () {
-      console.log(this.form)
-      this.$refs.ruleForm.resetFields()
     },
     handleChange (info) {
       if (info.file.status !== 'uploading') {
@@ -363,10 +348,7 @@ export default {
           //   this.$message.error('Error!')
           // }
           if (response.status === 200 && response.data.code === 0) {
-            this.$message.success('get report successfully')
-            console.log('see what', response.data)
             this.report_back = response.data.data
-            console.log('report back1', this.report_back)
           } else {
             this.$message.error(response.data.msg)
           }
@@ -374,7 +356,6 @@ export default {
         .catch((error) => {
           console.log(error)
         })
-      console.log('report back2', this.report_back)
       for (var i = 0; i < this.report_back.length; i++) {
         this.$http.get('/api/admin/comment/report', {
           params: {
@@ -388,7 +369,6 @@ export default {
             //   this.$message.error('Error!')
             // }
             if (response.status === 200 && response.data.code === 0) {
-              this.$message.success('get detail successfully')
               this.report_detail[i] = response.data.data
             } else {
               this.$message.error(response.data.msg)
@@ -402,12 +382,10 @@ export default {
     deleteComment (comment) {
       // console.log('post id type',typeof(comment.comment_id))
       this.report_id = comment.comment_id
-      console.log('report id', this.report_id)
       this.$http.post('/api/admin/comment/delete', qs.stringify({
         comment_id: this.report_id
       }))
         .then((response) => {
-          console.log(response)
           // if (response.status === 200 && response.code === 0) {
           //   this.$message.success('Create successfully')
           // } else {
