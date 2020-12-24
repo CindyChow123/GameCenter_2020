@@ -28,6 +28,7 @@ Vue.component(Card.Meta.name, Meta)
 Vue.component(Modal.name, Modal)
 Vue.component(Checkbox.name, Checkbox)
 Vue.component(Input.name, Input)
+Vue.component(Input.Group.name, Input.Group)
 Vue.use(FormModel)
 Vue.prototype.$message = message
 Vue.component(Avatar.name, Avatar)

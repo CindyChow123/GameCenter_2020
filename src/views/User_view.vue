@@ -66,8 +66,7 @@ export default {
       friends: [],
       recent_games: [],
       name: '',
-      email: '',
-      unfr: true
+      email: ''
     }
   },
   created () {
@@ -75,6 +74,7 @@ export default {
   },
   methods: {
     async getUserInfo () {
+      console.log('search_id', this.$route.query.id)
       this.unfr = this.$route.query.unfriend !== 'false'
       this.id = this.$route.query.id
       const result = await this.$http.get('/api/user', { params: { user_id: this.$route.query.id } })
