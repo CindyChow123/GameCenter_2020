@@ -59,8 +59,8 @@
         <br />
         <div v-for="(game, index) in games" :key="index">
           <a-col :span="6">
-            <router-link to= "/single_game">
-              <a-card hoverable style="width: 200px;margin-top:20px;margin-left: 20px" @click="clickGame(game)">
+            <router-link :to="`/single_game/${game.id}`">
+              <a-card hoverable style="width: 200px;margin-top:20px;margin-left: 20px">
                 <img
                   slot="cover"
                   alt="example"
@@ -102,7 +102,6 @@
 
 <script>
 // // @ is an alias to /src
-import qs from 'qs'
 
 export default {
   name: 'Store',
@@ -134,12 +133,6 @@ export default {
     // },
     toggleCollapsed () {
       this.collapsed = !this.collapsed
-    },
-    clickGame (game) {
-      this.$router.push({
-        path: '/single_game',
-        query: { target_game: game }
-      })
     },
     // onChange (a, b, c) {
     //   console.log(a, b, c)
@@ -180,12 +173,6 @@ export default {
       if (menu === 'All Games') {
         tmp = ''
       }
-      var obji = {
-        tag: tmp,
-        name: '',
-        page: this.current - 1
-      }
-      obji = qs.stringify(obji)
       this.$http.get('/game/list', {
         params: {
           tag: tmp,
@@ -196,6 +183,7 @@ export default {
         .then((response) => {
           if (response.status === 200 && response.data.code === 0) {
             this.games = response.data.data.content
+            console.log('games', this.games)
             for (let i = 0; i < this.games.length; i++) {
               this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
             }
