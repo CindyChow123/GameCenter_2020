@@ -69,7 +69,7 @@ export default {
       var cList = result.data.data
       var it
       for (var i = 0; i < cList.length; i++) {
-        it = await this.$http.get('/game/info', { params: { id: cList[i].id } })
+        it = await this.$http.get('/game/info', { params: { id: cList[i].game_id } })
         if (it.status !== 200 || it.data.code !== 0) {
           return this.$message.error(it.data.msg)
         }

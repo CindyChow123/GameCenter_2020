@@ -53,7 +53,7 @@
     </a-button>
     <br/>
     <a-list v-if="dlc.length > 0" item-layout="horizontal" :data-source="dlc_name" al style="margin-left: 420px">
-      <strong style="font-size: 25px; margin-left: 300px; color: white">DLC</strong>
+      <strong style="font-size: 25px; color: white">DLC</strong>
       <br/>
       <div v-for="(d, index) in dlc" :key="index">
         <a-list-item
@@ -338,7 +338,7 @@ export default {
       }
     },
     submitComments () {
-      if (window.sessionStorage.getItem('token')) {
+      if (window.sessionStorage.getItem('token') && this.game_status === 'download') {
         var obji = {
           UID: this.user_id,
           GID: this.game.id,
@@ -380,7 +380,7 @@ export default {
         }
         this.reload()
       } else {
-        alert('Please log in first')
+        alert('Not qualified to comment')
       }
     },
     async getDLC () {

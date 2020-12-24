@@ -165,6 +165,9 @@ export default {
               this.games = response.data.data.content
               for (let i = 0; i < this.games.length; i++) {
                 this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
+                if (this.games[i].description.length >= 9) {
+                  this.games[i].description = this.games[i].description.substring(0, 9)
+                }
               }
             } else {
               // this.$message.error('Error!')
@@ -192,7 +195,7 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-        this.$router.push({ path: '/user_view', query: { id: this.search_user.id, unfriend: false } })
+        this.$router.push({ path: '/user_view', query: { id: this.search_user.id, unfriend: true } })
       }
     },
     handleClick (e) {
@@ -223,6 +226,9 @@ export default {
             console.log('games', this.games)
             for (let i = 0; i < this.games.length; i++) {
               this.urls[i] = 'http://47.115.50.249/game/getPhoto/' + this.games[i].front_image
+              if (this.games[i].description.length >= 9) {
+                this.games[i].description = this.games[i].description.substring(0, 9)
+              }
             }
           } else {
             // this.$message.error('Error!')

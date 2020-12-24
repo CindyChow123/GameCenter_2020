@@ -66,7 +66,8 @@ export default {
       friends: [],
       recent_games: [],
       name: '',
-      email: ''
+      email: '',
+      unfr: true
     }
   },
   created () {
