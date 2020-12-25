@@ -387,7 +387,7 @@ export default {
             if (response.status === 200 && response.data.code === 0) {
               this.report_detail[i] = response.data.data
             } else {
-              this.$message.error(response.data.msg)
+              // this.$message.error(response.data.msg)
             }
           })
           .catch((error) => {

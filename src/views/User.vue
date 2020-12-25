@@ -67,7 +67,7 @@
             </a-list-item-meta>
             <a-popover v-model="item.fr.chatVisible" title="Message" trigger="click">
               <a-textarea slot="content" placeholder="write your message here" allow-clear v-model="item.chat"/>
-              <a-button type="primary" slot="content" @click="item.inviteVisible = false;handleChat(item.chat,item.fr.name)" style="width: 100%; margin-top: 10px">send</a-button>
+              <a-button type="primary" slot="content" @click="item.fr.chatVisible = false;handleChat(item.chat,item.fr.name)" style="width: 100%; margin-top: 10px">send</a-button>
               <a-button ghost type="link" shape="circle" style="margin-right: 50px" icon="message">
               </a-button>
             </a-popover>

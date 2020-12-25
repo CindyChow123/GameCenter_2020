@@ -30,10 +30,12 @@ export default {
   },
   methods: {
     userManual () {
-      window.location.href = 'http://47.115.50.249/api/user/manual?type=user'
+      // window.location.href = 'http://47.115.50.249/api/user/manual?type=user'
+      window.open('http://47.115.50.249/api/user/manual?type=user', '_blank')
     },
     developerManual () {
-      window.location.href = 'http://47.115.50.249/api/user/manual?type=developer'
+      // window.location.href = 'http://47.115.50.249/api/user/manual?type=developer'
+      window.open('http://47.115.50.249/api/user/manual?type=developer', '_blank')
     }
   }
 }

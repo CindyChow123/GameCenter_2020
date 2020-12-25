@@ -13,7 +13,7 @@
           Add to friend list and Invite to play
         </a-button>
         <a-button ghost type="dashed" v-else>
-          Already friended
+          Already requested
         </a-button>
       </a-col>
     </a-row>
@@ -44,11 +44,11 @@
           <a-list-item slot="renderItem" slot-scope="item">
             <a-list-item-meta>
               <a slot="title" style="color: white">
-                <router-link :to="'/user_view?id='+item.id">{{ item.name }}</router-link>
+                <router-link :to="{path: '/user_view', query:{ id:item.id, unfriend: false}}">{{ item.name }}</router-link>
               </a>
               <a-avatar
                 slot="avatar"
-                :src="item.path"
+                :src="'http://47.115.50.249/api/user/avatar/'+item.id"
               />
             </a-list-item-meta>
           </a-list-item>
@@ -78,11 +78,11 @@ export default {
       console.log('search_id', this.$route.query.id)
       this.unfr = this.$route.query.unfriend !== 'false'
       this.id = this.$route.query.id
-      const result = await this.$http.get('/api/user', { params: { user_id: this.$route.query.id } })
+      const result = await this.$http.get('/api/user', { params: { user_id: this.id } })
       if (result.status !== 200 || result.data.code !== 0) {
         return this.$message.error(result.data.msg)
       }
-      this.friends = result.data.data.friends
+      console.log(result)
       const glist = result.data.data.games
       // console.log(glist)
       for (var g in glist) {
@@ -93,11 +93,16 @@ export default {
         }
         this.recent_games.push(ginfo.data.data.game)
       }
-      // console.log(this.recent_games)
+      console.log(result)
       this.name = result.data.data.name
       this.email = result.data.data.email
       this.path = result.data.data.path
-      // console.log(result)
+      const re = await this.$http.get('/api/user/other', { params: { user_id: this.id } })
+      if (re.status !== 200 || re.data.code !== 0) {
+        return this.$message.error(re.data.msg)
+      }
+      this.friends = re.data.data.friends
+      // console.log(re)
     },
     async HandleFriendReq () {
       this.unfr = false
