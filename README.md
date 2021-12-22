@@ -1,24 +1,4 @@
-# gamecenter
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# Gamecenter
+In the course of Object-oriented Analysis and Design, our team developed a game platform website.
+# Video Demonstration
+![](https://github.com/CindyChow123/GameCenter_2020_fall_ooad/blob/master/user%2Bdeveloper.gif)
